@@ -1,8 +1,8 @@
-# Spring Boot API with React UI
+# JUG Tours with Spring Boot and React
  
-This example app shows how to create a Spring Boot API and display its data with a React UI.
+This example app shows how to create a Spring Boot API and CRUD (create, read, update, and delete) its data with a React app.
 
-Please read [Bootiful Development with Spring Boot and React](https://developer.okta.com/blog/2017/12/06/bootiful-development-with-spring-boot-and-react) to see how this app was created.
+<!--Please read []() to see how this app was created.-->
 
 **Prerequisites:** [Java 8](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html) and [Node.js](https://nodejs.org/).
 
@@ -18,57 +18,46 @@ Please read [Bootiful Development with Spring Boot and React](https://developer.
 To install this example application, run the following commands:
 
 ```bash
-git clone https://github.com/oktadeveloper/spring-boot-react-example.git
-cd spring-boot-react-example
+git clone https://github.com/oktadeveloper/okta-spring-boot-react-crud-example.git spring-react
+cd spring-react
 ```
 
 This will get a copy of the project installed locally. To install all of its dependencies and start each app, follow the instructions below.
 
-To run the server, cd into the `server` folder and run:
+To run the server, run:
  
 ```bash
 ./mvnw spring-boot:run
 ```
 
-To run the client, cd into the `client` folder and run:
+To run the client, cd into the `app` folder and run:
  
 ```bash
 yarn && yarn start
 ```
 
-The primary example (without authentication) is in the `master` branch, while the Okta integration is in the `okta` branch. To check out the Okta branch on your local machine, run the following command.
+You can also run everything using Maven:
 
 ```bash
-git checkout okta
+./mvnw package -Pprod
+java -jar target/*.jar
 ```
 
 ### Create an Application in Okta
 
-You will need to [create an OpenID Connect Application in Okta](https://developer.okta.com/blog/2017/12/06/bootiful-development-with-spring-boot-and-react#create-an-oidc-app-in-okta) to get your values to perform authentication. 
+You will need to [create an OIDC Application in Okta]() to get your values to perform authentication. 
 
-Log in to your Okta Developer account (or [sign up](https://developer.okta.com/signup/) if you don’t have an account) and navigate to **Applications** > **Add Application**. Click **Single-Page App**, click **Next**, and give the app a name you’ll remember. Change all instances of `localhost:8080` to `localhost:3000` and click **Done**.
+Log in to your Okta Developer account (or [sign up](https://developer.okta.com/signup/) if you don’t have an account) and navigate to **Applications** > **Add Application**. Click **Web**, click **Next**, and give the app a name you’ll remember. Add `http://localhost:8080/login` as a login redirect URI and click **Done**.
 
 #### Server Configuration
 
-Set the `issuer` and copy the `clientId` into `server/src/main/resources/application.properties`. 
+Set the `issuer` and copy the `clientId` into `src/main/resources/application.yml`. 
 
 **NOTE:** The value of `{yourOktaDomain}` should be something like `dev-123456.oktapreview.com`. Make sure you don't include `-admin` in the value!
 
 ```properties
 okta.oauth2.issuer=https://{yourOktaDomain}/oauth2/default
 okta.oauth2.clientId={clientId}
-```
-
-#### Client Configuration
-
-Set the `issuer` and copy the `clientId` into `client/src/App.tsx`.
-
-```typescript
-const config = {
-  issuer: 'https://{yourOktaDomain}/oauth2/default',
-  redirectUri: window.location.origin + '/implicit/callback',
-  clientId: '{clientId}'
-};
 ```
 
 ## Links
@@ -80,7 +69,7 @@ This example uses the following libraries provided by Okta:
 
 ## Help
 
-Please post any questions as comments on the [blog post](https://developer.okta.com/blog/2017/12/06/bootiful-development-with-spring-boot-and-react), or visit our [Okta Developer Forums](https://devforum.okta.com/). You can also email developers@okta.com if you would like to create a support ticket.
+Please post any questions as comments on the [blog post](), or visit our [Okta Developer Forums](https://devforum.okta.com/). You can also email developers@okta.com if you would like to create a support ticket.
 
 ## License
 
