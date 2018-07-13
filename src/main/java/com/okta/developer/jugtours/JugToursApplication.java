@@ -4,6 +4,7 @@ import lombok.Data;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,11 +17,18 @@ import java.util.Collection;
 import java.util.stream.Stream;
 
 @SpringBootApplication
-public class JugtoursApplication {
+public class JugToursApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(JugtoursApplication.class, args);
+		SpringApplication.run(JugToursApplication.class, args);
 	}
+
+	@Bean
+    CommandLineRunner init() {
+	    return args -> {
+	        System.out.println("Hello Spring!");
+        };
+    }
 }
 
 @Data
