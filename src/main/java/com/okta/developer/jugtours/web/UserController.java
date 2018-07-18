@@ -42,17 +42,6 @@ public class UserController {
         }
     }
 
-    @GetMapping("/api/tokens")
-    public ResponseEntity<Map<String, String>> getTokens() {
-        OAuth2RestTemplate oauth2RestTemplate = this.templateFactory.getUserInfoRestTemplate();
-        String idToken = (String) oauth2RestTemplate.getAccessToken().getAdditionalInformation().get("id_token");
-
-        Map<String, String> tokens = new HashMap<>();
-        tokens.put("access_token", oauth2RestTemplate.getAccessToken().getValue());
-        tokens.put("id_token", idToken);
-        return ResponseEntity.ok(tokens);
-    }
-
     @PostMapping("/api/logout")
     public ResponseEntity<?> logout(HttpServletRequest request) {
         // send logout URL to client so they can initiate logout - doesn't work from the server side
