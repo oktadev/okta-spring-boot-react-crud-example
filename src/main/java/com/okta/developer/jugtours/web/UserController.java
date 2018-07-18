@@ -22,7 +22,7 @@ public class UserController {
 
     private final UserInfoRestTemplateFactory templateFactory;
 
-    @Value("${spring.security.oauth2.client.provider.okta.issuer}")
+    @Value("${spring.security.oauth2.client.provider.okta.issuer-uri}")
     String issuerUri;
 
     public UserController(UserInfoRestTemplateFactory templateFactory) {
