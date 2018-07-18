@@ -25,16 +25,11 @@ public class UserController {
     String issuerUri;
 
     @GetMapping("/api/user")
-    public ResponseEntity<?> getUser(Principal principal) {
-        if (principal == null) {
+    public ResponseEntity<?> getUser(@AuthenticationPrincipal OAuth2User user) {
+        if (user == null) {
             return new ResponseEntity<>("", HttpStatus.OK);
-        }
-        if (principal instanceof OAuth2AuthenticationToken) {
-            OAuth2User authentication = ((OAuth2AuthenticationToken) principal).getPrincipal();
-            Map<String, Object> details = authentication.getAttributes();
-            return ResponseEntity.ok().body(details);
         } else {
-            return ResponseEntity.ok().body(principal.getName());
+            return ResponseEntity.ok().body(user.getAttributes());
         }
     }
 
