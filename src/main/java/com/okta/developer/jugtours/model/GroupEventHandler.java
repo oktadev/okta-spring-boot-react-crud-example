@@ -18,7 +18,8 @@ public class GroupEventHandler {
     public void handleBeforeSave(Group group) {
         Map<String, Object> details = (Map<String, Object>) SecurityContextHolder.getContext()
                 .getAuthentication().getDetails();
-        User user = new User(null, details.get("name").toString(), details.get("email").toString());
+        User user = new User(details.get("sub").toString(),
+                details.get("name").toString(), details.get("email").toString());
         log.info("Creating group: {} with user: {}", group.getName());
         group.setUser(user);
     }
