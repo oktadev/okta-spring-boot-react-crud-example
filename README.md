@@ -51,21 +51,34 @@ Log in to your Okta Developer account (or [sign up](https://developer.okta.com/s
 
 #### Server Configuration
 
-Set the `issuer` and copy the `clientId` into `src/main/resources/application.yml`. 
+Set the `issuer` and copy the `clientId` and `clientSecret` into `src/main/resources/application.yml`. 
 
 **NOTE:** The value of `{yourOktaDomain}` should be something like `dev-123456.oktapreview.com`. Make sure you don't include `-admin` in the value!
 
-```properties
-okta.oauth2.issuer=https://{yourOktaDomain}/oauth2/default
-okta.oauth2.clientId={clientId}
+```yaml
+spring:
+  profiles:
+    active: @spring.profiles.active@
+  security:
+    oauth2:
+      client:
+        registration:
+          okta:
+            client-id: {clientId}
+            client-secret: {clientSecret}
+            scope: openid email profile
+        provider:
+          okta:
+            issuer-uri: https://{yourOktaDomain}/oauth2/default
 ```
 
 ## Links
 
-This example uses the following libraries provided by Okta:
+This example uses the following open source libraries:
 
-* [Okta Spring Boot Starter](https://github.com/okta/okta-spring-boot)
-* [Okta React SDK](https://github.com/okta/okta-oidc-js/tree/master/packages/okta-react)
+* [React](https://reactjs.org/)
+* [Spring Boot](https://spring.io/projects/spring-boot)
+* [Spring Security](https://spring.io/projects/spring-security)
 
 ## Help
 
