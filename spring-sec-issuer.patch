@@ -1,0 +1,120 @@
+diff --git a/pom.xml b/pom.xml
+index 3b477f5..24ab1aa 100644
+--- a/pom.xml
++++ b/pom.xml
+@@ -14,7 +14,7 @@
+     <parent>
+         <groupId>org.springframework.boot</groupId>
+         <artifactId>spring-boot-starter-parent</artifactId>
+-        <version>2.0.3.RELEASE</version>
++        <version>2.0.4.BUILD-SNAPSHOT</version>
+         <relativePath/> <!-- lookup parent from repository -->
+     </parent>
+ 
+@@ -25,6 +25,7 @@
+         <frontend-maven-plugin.version>1.6</frontend-maven-plugin.version>
+         <node.version>v10.6.0</node.version>
+         <yarn.version>v1.8.0</yarn.version>
++        <spring-security.version>5.1.0.BUILD-SNAPSHOT</spring-security.version>
+     </properties>
+ 
+     <dependencies>
+@@ -45,6 +46,18 @@
+             <artifactId>spring-security-oauth2-autoconfigure</artifactId>
+             <version>2.0.1.RELEASE</version>
+         </dependency>
++        <dependency>
++            <groupId>org.springframework.security</groupId>
++            <artifactId>spring-security-config</artifactId>
++        </dependency>
++        <dependency>
++            <groupId>org.springframework.security</groupId>
++            <artifactId>spring-security-oauth2-client</artifactId>
++        </dependency>
++        <dependency>
++            <groupId>org.springframework.security</groupId>
++            <artifactId>spring-security-oauth2-jose</artifactId>
++        </dependency>
+         <dependency>
+             <groupId>com.h2database</groupId>
+             <artifactId>h2</artifactId>
+@@ -175,4 +188,22 @@
+             </properties>
+         </profile>
+     </profiles>
++
++    <pluginRepositories>
++        <pluginRepository>
++            <id>spring-snapshots</id>
++            <name>Spring Snapshots</name>
++            <url>https://repo.spring.io/snapshot</url>
++            <snapshots>
++                <enabled>true</enabled>
++            </snapshots>
++        </pluginRepository>
++    </pluginRepositories>
++    <repositories>
++        <repository>
++            <id>spring-snapshots</id>
++            <name>Spring Snapshot Repository</name>
++            <url>http://repo.spring.io/snapshot</url>
++        </repository>
++    </repositories>
+ </project>
+diff --git a/src/main/java/com/okta/developer/jugtours/web/UserController.java b/src/main/java/com/okta/developer/jugtours/web/UserController.java
+index eee3fde..17c1464 100644
+--- a/src/main/java/com/okta/developer/jugtours/web/UserController.java
++++ b/src/main/java/com/okta/developer/jugtours/web/UserController.java
+@@ -22,8 +22,8 @@ public class UserController {
+ 
+     private final UserInfoRestTemplateFactory templateFactory;
+ 
+-    @Value("${security.oauth2.client.access-token-uri}")
+-    String accessTokenUri;
++    @Value("${spring.security.oauth2.client.provider.okta.issuer}")
++    String issuerUri;
+ 
+     public UserController(UserInfoRestTemplateFactory templateFactory) {
+         this.templateFactory = templateFactory;
+@@ -62,8 +62,7 @@ public class UserController {
+         OAuth2RestTemplate oauth2RestTemplate = this.templateFactory.getUserInfoRestTemplate();
+         String idToken = (String) oauth2RestTemplate.getAccessToken().getAdditionalInformation().get("id_token");
+ 
+-        // logout URI can be derived from accessTokenUri
+-        String logoutUrl = accessTokenUri.replace("token", "logout");
++        String logoutUrl = issuerUri + "/v1/logout";
+ 
+         Map<String, String> logoutDetails = new HashMap<>();
+         logoutDetails.put("logoutUrl", logoutUrl);
+diff --git a/src/main/resources/application.yml b/src/main/resources/application.yml
+index 18ddd91..e14e090 100644
+--- a/src/main/resources/application.yml
++++ b/src/main/resources/application.yml
+@@ -1,13 +1,14 @@
+-security:
+-  oauth2:
+-    client:
+-      access-token-uri: https://dev-158606.oktapreview.com/oauth2/default/v1/token
+-      user-authorization-uri: https://dev-158606.oktapreview.com/oauth2/default/v1/authorize
+-      client-id: 0oafqwenodi6cPzSC0h7
+-      client-secret: FLuPvd9Gf87Wu17Q6CAAFqK6WaIlPDdcKwQ9XplM
+-      scope: openid email profile
+-    resource:
+-      user-info-uri: https://dev-158606.oktapreview.com/oauth2/default/v1/userinfo
+ spring:
+   profiles:
+-    active: @spring.profiles.active@
+\ No newline at end of file
++    active: @spring.profiles.active@
++  security:
++    oauth2:
++      client:
++        registration:
++          okta:
++            client-id: 0oafqwenodi6cPzSC0h7
++            client-secret: FLuPvd9Gf87Wu17Q6CAAFqK6WaIlPDdcKwQ9XplM
++            scope: openid email profile
++        provider:
++          okta:
++            issuer: https://dev-158606.oktapreview.com/oauth2/default
+\ No newline at end of file
