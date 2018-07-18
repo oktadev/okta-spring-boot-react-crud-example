@@ -35,7 +35,7 @@ class Home extends Component {
     if (port === ':3000') {
       port = ':8080';
     }
-    window.location.href = '//' + window.location.hostname + port + '/login';
+    window.location.href = '//' + window.location.hostname + port + '/private';
   }
 
   logout() {

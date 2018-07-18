@@ -84,14 +84,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
             @Override
             public HttpServletRequest getMatchingRequest(HttpServletRequest request, HttpServletResponse response) {
-                DefaultSavedRequest saved = (DefaultSavedRequest) getRequest(request, response);
+                SavedRequest saved = getRequest(request, response);
 
                 if (saved == null) {
-                    return null;
-                }
-
-                if (!saved.doesRequestMatch(request, portResolver)) {
-                    log.debug("saved request doesn't match");
                     return null;
                 }
 

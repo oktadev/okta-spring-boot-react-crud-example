@@ -4,9 +4,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.oauth2.client.authentication.OAuth2LoginAuthenticationToken;
 import org.springframework.security.oauth2.core.oidc.OidcIdToken;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,9 +29,9 @@ public class UserController {
         if (principal == null) {
             return new ResponseEntity<>("", HttpStatus.OK);
         }
-        if (principal instanceof OAuth2LoginAuthenticationToken) {
-            OidcUser authentication = (OidcUser) principal;
-            Map<String, Object> details = authentication.getUserInfo().getClaims();
+        if (principal instanceof OAuth2AuthenticationToken) {
+            OAuth2User authentication = ((OAuth2AuthenticationToken) principal).getPrincipal();
+            Map<String, Object> details = authentication.getAttributes();
             return ResponseEntity.ok().body(details);
         } else {
             return ResponseEntity.ok().body(principal.getName());
@@ -40,6 +42,7 @@ public class UserController {
     public ResponseEntity<?> logout(HttpServletRequest request,
                                     @AuthenticationPrincipal(expression = "idToken") OidcIdToken idToken) {
         // send logout URL to client so they can initiate logout - doesn't work from the server side
+        // Make it easier: https://github.com/spring-projects/spring-security/issues/5540
         String logoutUrl = issuerUri + "/v1/logout";
 
         Map<String, String> logoutDetails = new HashMap<>();
