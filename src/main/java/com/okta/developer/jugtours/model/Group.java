@@ -1,10 +1,11 @@
 package com.okta.developer.jugtours.model;
 
-import lombok.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import java.util.Set;
 
 @Data
@@ -24,6 +25,8 @@ public class Group {
     private String stateOrProvince;
     private String country;
     private String postalCode;
+    @ManyToOne(cascade=CascadeType.ALL)
+    private User user;
 
     @OneToMany(fetch = FetchType.EAGER, cascade=CascadeType.ALL)
     private Set<Event> events;

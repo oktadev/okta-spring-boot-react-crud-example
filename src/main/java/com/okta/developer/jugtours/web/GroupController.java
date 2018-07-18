@@ -2,16 +2,21 @@ package com.okta.developer.jugtours.web;
 
 import com.okta.developer.jugtours.model.Group;
 import com.okta.developer.jugtours.model.GroupRepository;
+import com.okta.developer.jugtours.model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.security.Principal;
 import java.util.Collection;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -26,8 +31,8 @@ class GroupController {
 	}
 
 	@GetMapping("/groups")
-	Collection<Group> groups() {
-		return repository.findAll();
+	Collection<Group> groups(Principal principal) {
+		return repository.findAllByUserName(principal.getName());
 	}
 
     @GetMapping("/group/{id}")
@@ -38,8 +43,13 @@ class GroupController {
     }
 
 	@PostMapping("/group")
-    ResponseEntity<Group> createGroup(@Valid @RequestBody Group group) throws URISyntaxException {
+    ResponseEntity<Group> createGroup(@Valid @RequestBody Group group, Principal principal) throws URISyntaxException {
         log.info("Request to create group: {}", group);
+        OAuth2Authentication authentication = (OAuth2Authentication) principal;
+        Map<String, Object> details = (Map<String, Object>) authentication.getUserAuthentication().getDetails();
+        User user = new User(details.get("sub").toString(),
+                details.get("name").toString(), details.get("email").toString());
+        group.setUser(user);
         Group result = repository.save(group);
         return ResponseEntity.created(new URI("/api/group/" + result.getId()))
                 .body(result);
