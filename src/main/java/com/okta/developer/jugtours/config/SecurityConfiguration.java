@@ -6,24 +6,24 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.savedrequest.RequestCache;
 import org.springframework.security.web.savedrequest.SavedRequest;
 
-import javax.servlet.http.*;
-import java.util.*;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.util.Collection;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 @Configuration
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     private final Logger log = LoggerFactory.getLogger(SecurityConfiguration.class);
-
-    @Override
-    public void configure(WebSecurity web) throws Exception {
-        web.ignoring().antMatchers("/**/*.{js,html,css}");
-    }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -41,6 +41,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .requestCache(requestCache)
                 .and()
             .authorizeRequests()
+                .antMatchers("/**/*.{js,html,css}").permitAll()
                 .antMatchers("/", "/api/user").permitAll()
                 .anyRequest().authenticated();/*
             .and()
