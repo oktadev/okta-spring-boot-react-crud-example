@@ -1,13 +1,14 @@
-security:
-  oauth2:
-    client:
-      access-token-uri: https://dev-158606.oktapreview.com/oauth2/default/v1/token
-      user-authorization-uri: https://dev-158606.oktapreview.com/oauth2/default/v1/authorize
-      client-id: 0oafqwenodi6cPzSC0h7
-      client-secret: FLuPvd9Gf87Wu17Q6CAAFqK6WaIlPDdcKwQ9XplM
-      scope: openid email profile
-    resource:
-      user-info-uri: https://dev-158606.oktapreview.com/oauth2/default/v1/userinfo
 spring:
   profiles:
     active: @spring.profiles.active@
+  security:
+    oauth2:
+      client:
+        registration:
+          okta:
+            client-id: 0oafqwenodi6cPzSC0h7
+            client-secret: FLuPvd9Gf87Wu17Q6CAAFqK6WaIlPDdcKwQ9XplM
+            scope: openid email profile
+        provider:
+          okta:
+            issuer: https://dev-158606.oktapreview.com/oauth2/default

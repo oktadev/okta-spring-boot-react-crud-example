@@ -22,8 +22,8 @@ public class UserController {
 
     private final UserInfoRestTemplateFactory templateFactory;
 
-    @Value("${security.oauth2.client.access-token-uri}")
-    String accessTokenUri;
+    @Value("${spring.security.oauth2.client.provider.okta.issuer}")
+    String issuerUri;
 
     public UserController(UserInfoRestTemplateFactory templateFactory) {
         this.templateFactory = templateFactory;
@@ -62,8 +62,7 @@ public class UserController {
         OAuth2RestTemplate oauth2RestTemplate = this.templateFactory.getUserInfoRestTemplate();
         String idToken = (String) oauth2RestTemplate.getAccessToken().getAdditionalInformation().get("id_token");
 
-        // logout URI can be derived from accessTokenUri
-        String logoutUrl = accessTokenUri.replace("token", "logout");
+        String logoutUrl = issuerUri + "/v1/logout";
 
         Map<String, String> logoutDetails = new HashMap<>();
         logoutDetails.put("logoutUrl", logoutUrl);
