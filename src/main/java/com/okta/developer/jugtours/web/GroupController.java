@@ -55,7 +55,7 @@ class GroupController {
         // check to see if user already exists
         Optional<User> user = userRepository.findById(userId);
         group.setUser(user.orElse(new User(userId,
-                        details.get("name").toString(), details.get("email").toString())));
+                details.get("name").toString(), details.get("email").toString())));
 
         Group result = groupRepository.save(group);
         return ResponseEntity.created(new URI("/api/group/" + result.getId()))

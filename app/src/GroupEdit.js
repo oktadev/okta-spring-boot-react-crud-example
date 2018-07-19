@@ -19,7 +19,6 @@ class GroupEdit extends Component {
     postalCode: ''
   };
 
-
   constructor(props) {
     super(props);
     const {cookies} = props;
