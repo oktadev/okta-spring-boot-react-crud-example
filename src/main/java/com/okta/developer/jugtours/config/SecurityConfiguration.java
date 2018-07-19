@@ -47,15 +47,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             .authorizeRequests()
                 .antMatchers("/**/*.{js,html,css}").permitAll()
                 .antMatchers("/", "/api/user").permitAll()
-                .anyRequest().authenticated();/*
-            .and()
-                .requiresChannel()
-                .requestMatchers(r -> r.getHeader("x-forwarded-proto") != null)
-                .requiresSecure();*/
+                .anyRequest().authenticated();
     }
 
     @Bean
-    @Profile("dev")
     public RequestCache refererRequestCache() {
         return new RequestCache() {
             private String savedAttrName = getClass().getName().concat(".SAVED");
