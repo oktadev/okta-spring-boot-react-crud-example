@@ -28,15 +28,15 @@ class GroupController {
     private GroupRepository groupRepository;
     private UserRepository userRepository;
 
-	public GroupController(GroupRepository groupRepository, UserRepository userRepository) {
-		this.groupRepository = groupRepository;
-		this.userRepository = userRepository;
-	}
+    public GroupController(GroupRepository groupRepository, UserRepository userRepository) {
+        this.groupRepository = groupRepository;
+        this.userRepository = userRepository;
+    }
 
-	@GetMapping("/groups")
-	Collection<Group> groups(Principal principal) {
-		return groupRepository.findAllByUserId(principal.getName());
-	}
+    @GetMapping("/groups")
+    Collection<Group> groups(Principal principal) {
+        return groupRepository.findAllByUserId(principal.getName());
+    }
 
     @GetMapping("/group/{id}")
     ResponseEntity<?> getGroup(@PathVariable Long id) {
@@ -45,7 +45,7 @@ class GroupController {
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
-	@PostMapping("/group")
+    @PostMapping("/group")
     ResponseEntity<Group> createGroup(@Valid @RequestBody Group group,
                                       @AuthenticationPrincipal OAuth2User principal) throws URISyntaxException {
         log.info("Request to create group: {}", group);

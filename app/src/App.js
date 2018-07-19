@@ -8,15 +8,17 @@ import { CookiesProvider } from 'react-cookie';
 
 class App extends Component {
   render() {
-    return <CookiesProvider>
-      <Router>
-        <Switch>
-          <Route path='/' exact={true} component={Home}/>
-          <Route path='/groups' exact={true} component={GroupList}/>
-          <Route path='/groups/:id' component={GroupEdit}/>
-        </Switch>
-      </Router>
-    </CookiesProvider>
+    return (
+      <CookiesProvider>
+        <Router>
+          <Switch>
+            <Route path='/' exact={true} component={Home}/>
+            <Route path='/groups' exact={true} component={GroupList}/>
+            <Route path='/groups/:id' component={GroupEdit}/>
+          </Switch>
+        </Router>
+      </CookiesProvider>
+    )
   }
 }
 
