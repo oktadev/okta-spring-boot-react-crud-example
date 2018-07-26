@@ -32,9 +32,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         SavedRequestAwareAuthenticationSuccessHandler handler = new SavedRequestAwareAuthenticationSuccessHandler();
         handler.setRequestCache(requestCache);
         http
-            .exceptionHandling()
-                .authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/oauth2/authorization/okta"))
-                .and()
             .oauth2Login()
                 .successHandler(handler)
                 .and()
