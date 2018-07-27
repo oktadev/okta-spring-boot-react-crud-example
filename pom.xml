@@ -22,7 +22,6 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
-        <spring-security.version>5.1.0.BUILD-SNAPSHOT</spring-security.version>
         <frontend-maven-plugin.version>1.6</frontend-maven-plugin.version>
         <node.version>v10.6.0</node.version>
         <yarn.version>v1.8.0</yarn.version>
@@ -184,7 +183,7 @@
         <pluginRepository>
             <id>spring-snapshots</id>
             <name>Spring Snapshots</name>
-            <url>https://repo.spring.io/snapshot</url>
+            <url>https://repo.spring.io/libs-snapshot</url>
             <snapshots>
                 <enabled>true</enabled>
             </snapshots>
@@ -194,7 +193,7 @@
         <repository>
             <id>spring-snapshots</id>
             <name>Spring Snapshots</name>
-            <url>http://repo.spring.io/snapshot</url>
+            <url>http://repo.spring.io/libs-snapshot</url>
         </repository>
     </repositories>
 </project>
