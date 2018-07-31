@@ -6,8 +6,8 @@ spring:
       client:
         registration:
           okta:
-            client-id: 0oafrf327dXcTWh3j0h7
-            client-secret: gXoRPO1uKff1X12MZpGIppbsyDDvi6QHFrfqooFU
+            client-id: 0oafudk8gcSusspTN0h7
+            client-secret: ZjAdC_75kgU3y1N7E5Kp_BmEY8LhNE3B3DyaFeBx
             scope: openid email profile
         provider:
           okta:
