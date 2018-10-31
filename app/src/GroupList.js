@@ -3,7 +3,7 @@ import { Button, ButtonGroup, Container, Table } from 'reactstrap';
 import AppNavbar from './AppNavbar';
 import { Link, withRouter } from 'react-router-dom';
 import { instanceOf } from 'prop-types';
-import { Cookies, withCookies } from 'react-cookie';
+import { withCookies, Cookies } from 'react-cookie';
 
 class GroupList extends Component {
   static propTypes = {
@@ -23,7 +23,7 @@ class GroupList extends Component {
     fetch('api/groups', {credentials: 'include'})
       .then(response => response.json())
       .then(data => this.setState({groups: data, isLoading: false}))
-      .catch(() => this.props.history.push('/'))
+      .catch(() => this.props.history.push('/'));
   }
 
   async remove(id) {
@@ -62,7 +62,7 @@ class GroupList extends Component {
         })}</td>
         <td>
           <ButtonGroup>
-            <Button size="sm" color="primary" tag={Link} to={'/groups/' + group.id}>Edit</Button>
+            <Button size="sm" color="primary" tag={Link} to={"/groups/" + group.id}>Edit</Button>
             <Button size="sm" color="danger" onClick={() => this.remove(group.id)}>Delete</Button>
           </ButtonGroup>
         </td>
