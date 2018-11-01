@@ -6,9 +6,9 @@ spring:
       client:
         registration:
           okta:
-            client-id: 0oafudk8gcSusspTN0h7
-            client-secret: ZjAdC_75kgU3y1N7E5Kp_BmEY8LhNE3B3DyaFeBx
-            scope: openid email profile
+            client-id: 0oah3u9c73C3n5hR80h7
+            client-secret: G75X-cPYXSumg2PC1jk_lnoPqEq9TmwXigcw8jPo
+            scope: openid, email, profile
         provider:
           okta:
             issuer-uri: https://dev-737523.oktapreview.com/oauth2/default

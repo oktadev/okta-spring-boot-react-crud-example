@@ -39,7 +39,6 @@ class Home extends Component {
   }
 
   logout() {
-    console.log('logging out...');
     fetch('/api/logout', {method: 'POST', credentials: 'include',
       headers: {'X-XSRF-TOKEN': this.state.csrfToken}}).then(res => res.json())
       .then(response => {
