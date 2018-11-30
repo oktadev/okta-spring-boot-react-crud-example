@@ -36,12 +36,6 @@ To run the client, cd into the `app` folder and run:
 yarn && yarn start
 ```
 
-You can also run everything using Maven:
-
-```bash
-./mvnw -Pprod
-```
-
 ### Create an Application in Okta
 
 You will need to [create an OIDC Application in Okta]() to get your values to perform authentication. 
