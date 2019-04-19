@@ -62,7 +62,7 @@ class GroupController {
                 .body(result);
     }
 
-    @PutMapping("/group")
+    @PutMapping("/group/{id}")
     ResponseEntity<Group> updateGroup(@Valid @RequestBody Group group) {
         log.info("Request to update group: {}", group);
         Group result = groupRepository.save(group);
