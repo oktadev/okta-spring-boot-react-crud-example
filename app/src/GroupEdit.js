@@ -52,7 +52,6 @@ class GroupEdit extends Component {
 
   async handleSubmit(event) {
     event.preventDefault();
-
     const {item, csrfToken} = this.state;
 
     await fetch('/api/group' + (item.id ? '/' + item.id : '') , {
