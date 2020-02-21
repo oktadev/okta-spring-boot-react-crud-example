@@ -54,10 +54,10 @@ class GroupEdit extends Component {
     event.preventDefault();
     const {item, csrfToken} = this.state;
 
-    await fetch('/api/group', {
+    await fetch('/api/group' + (item.id ? '/' + item.id : '') , {
       method: (item.id) ? 'PUT' : 'POST',
       headers: {
-        'X-XSRF-TOKEN': this.state.csrfToken,
+        'X-XSRF-TOKEN': csrfToken,
         'Accept': 'application/json',
         'Content-Type': 'application/json'
       },
