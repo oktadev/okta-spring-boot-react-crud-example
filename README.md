@@ -63,7 +63,7 @@ NOTE: You can also use the Okta Admin Console to create your app. See [Create a 
 
 #### Server Configuration
 
-Copy the values from `application.properties` into `src/main/resources/application.yml` and delete the file.
+Copy the values from `application.properties` into `src/main/resources/application.yml` and delete `application.properties`.
 
 ```yaml
 spring:
