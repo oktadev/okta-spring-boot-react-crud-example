@@ -38,15 +38,32 @@ yarn && yarn start
 
 ### Create an Application in Okta
 
-You will need to [create an OIDC Application in Okta]() to get your values to perform authentication. 
+Before you begin, you'll need a free Okta developer account. Install the [Okta CLI](https://cli.okta.com) and run `okta register` to sign up for a new account. If you already have an account, run `okta login`.
 
-Log in to your Okta Developer account (or [sign up](https://developer.okta.com/signup/) if you don’t have an account) and navigate to **Applications** > **Add Application**. Click **Web**, click **Next**, and give the app a name you’ll remember. Specify `http://localhost:8080/login/oauth2/code/okta` as a Login redirect URI. Click **Done**, then click **Edit** to edit General Settings. Add `http://localhost:3000` and `http://localhost:8080` as Logout redirect URIs, then click **Save**. 
+Then, run `okta apps create`. Select the default app name, or change it as you see fit. Choose **Web** and press **Enter**.
+
+Select **Okta Spring Boot Starter**. Accept the default Redirect URI of `http://localhost:8080/login/oauth2/code/okta` and use `[http://localhost:3000,http://localhost:8080]` for the Logout Redirect URI.
+
+The Okta CLI will create an OIDC Web App in your Okta Org. It will add the redirect URIs you specified and grant access to the Everyone group. You will see output like the following when it's finished:
+
+```shell
+Okta application configuration has been written to:
+  /path/to/app/src/main/resources/application.properties
+```
+
+Open `src/main/resources/application.properties` to see the issuer and credentials for your app.
+
+```properties
+okta.oauth2.issuer=https://dev-133337.okta.com/oauth2/default
+okta.oauth2.client-id=0oab8eb55Kb9jdMIr5d6
+okta.oauth2.client-secret=NEVER-SHOW-SECRETS
+```
+
+NOTE: You can also use the Okta Admin Console to create your app. See [Create a Spring Boot App](https://developer.okta.com/docs/guides/sign-into-web-app/springboot/create-okta-application/) for more information.
 
 #### Server Configuration
 
-Set the `issuer` and copy the `clientId` and `clientSecret` into `src/main/resources/application.yml`. 
-
-**NOTE:** The value of `{yourOktaDomain}` should be something like `dev-123456.oktapreview.com`. Make sure you don't include `-admin` in the value!
+Copy the values from `application.properties` into `src/main/resources/application.yml` and delete `application.properties`.
 
 ```yaml
 spring:
@@ -59,11 +76,13 @@ spring:
           okta:
             client-id: {clientId}
             client-secret: {clientSecret}
-            scope: openid email profile
+            scope: openid, email, profile
         provider:
           okta:
             issuer-uri: https://{yourOktaDomain}/oauth2/default
 ```
+
+Run `./mvnw spring-boot:run -Pprod` and log in to your app at `http://localhost:8080`.
 
 ## Links
 
