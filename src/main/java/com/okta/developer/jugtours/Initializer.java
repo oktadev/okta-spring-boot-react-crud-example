@@ -21,15 +21,16 @@ class Initializer implements CommandLineRunner {
 
     @Override
     public void run(String... strings) {
-        Stream.of("Denver JUG", "Utah JUG", "Seattle JUG",
-                "Richmond JUG").forEach(name ->
+        Stream.of("Seattle JUG", "Denver JUG", "Dublin JUG",
+                "London JUG").forEach(name ->
                 repository.save(new Group(name))
         );
 
-        Group djug = repository.findByName("Denver JUG");
-        Event e = Event.builder().title("Full Stack Reactive")
-                .description("Reactive with Spring Boot + React")
-                .date(Instant.parse("2018-12-12T18:00:00.000Z"))
+        Group djug = repository.findByName("Seattle JUG");
+        Event e = Event.builder().title("Micro Frontends for Java Developers")
+                .description("JHipster now has microfrontend support!")
+                .date(Instant.parse("2022-09-13T17:00:00.000Z"))
+                // todo: is this ^^ the correct time for Seattle JUG?
                 .build();
         djug.setEvents(Collections.singleton(e));
         repository.save(djug);

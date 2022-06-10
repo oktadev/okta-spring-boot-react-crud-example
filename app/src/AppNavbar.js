@@ -1,35 +1,27 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import { Collapse, Nav, Navbar, NavbarBrand, NavbarToggler, NavItem, NavLink } from 'reactstrap';
 import { Link } from 'react-router-dom';
 
-export default class AppNavbar extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {isOpen: false};
-    this.toggle = this.toggle.bind(this);
-  }
+const AppNavbar = () => {
 
-  toggle() {
-    this.setState({
-      isOpen: !this.state.isOpen
-    });
-  }
+  const [isOpen, setIsOpen] = useState(false);
 
-  render() {
-    return <Navbar color="dark" dark expand="md">
+  return (
+    <Navbar color="dark" dark expand="md">
       <NavbarBrand tag={Link} to="/">Home</NavbarBrand>
-      <NavbarToggler onClick={this.toggle}/>
-      <Collapse isOpen={this.state.isOpen} navbar>
-        <Nav className="ml-auto" navbar>
+      <NavbarToggler onClick={() => { setIsOpen(!isOpen) }}/>
+      <Collapse isOpen={isOpen} navbar>
+        <Nav className="justify-content-end" style={{width: "100%"}} navbar>
           <NavItem>
-            <NavLink
-              href="https://twitter.com/oktadev">@oktadev</NavLink>
+            <NavLink href="https://twitter.com/oktadev">@oktadev</NavLink>
           </NavItem>
           <NavItem>
-            <NavLink href="https://github.com/oktadeveloper/okta-spring-boot-react-crud-example">GitHub</NavLink>
+            <NavLink href="https://github.com/oktadev/okta-spring-boot-react-crud-example">GitHub</NavLink>
           </NavItem>
         </Nav>
       </Collapse>
-    </Navbar>;
-  }
-}
+    </Navbar>
+  );
+};
+
+export default AppNavbar;
