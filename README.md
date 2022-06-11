@@ -2,7 +2,7 @@
  
 This example app shows how to create a Spring Boot API and CRUD (create, read, update, and delete) its data with a React app.
 
-Please read [Use React and Spring Boot to Build a Simple CRUD App](https://developer.okta.com/blog/2018/07/19/simple-crud-react-and-spring-boot) to see how this app was created.
+Please read [Use React and Spring Boot to Build a Simple CRUD App](https://developer.okta.com/2022/06/16/simple-crud-react-and-spring-boot) to see how this app was created.
 
 **Prerequisites:** [Java 8](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html), [Node.js 8+](https://nodejs.org/), and [Yarn](https://yarnpkg.com/en/docs/install). You can use npm instead of Yarn, but you'll need to translate the Yarn syntax to npm.
 
@@ -18,7 +18,7 @@ Please read [Use React and Spring Boot to Build a Simple CRUD App](https://devel
 To install this example application, run the following commands:
 
 ```bash
-git clone https://github.com/oktadeveloper/okta-spring-boot-react-crud-example.git spring-react
+git clone https://github.com/oktadev/okta-spring-boot-react-crud-example.git spring-react
 cd spring-react
 ```
 
@@ -33,7 +33,7 @@ To run the server, run:
 To run the client, cd into the `app` folder and run:
  
 ```bash
-yarn && yarn start
+npm i && npm start
 ```
 
 ### Create an Application in Okta
@@ -61,27 +61,6 @@ okta.oauth2.client-secret=NEVER-SHOW-SECRETS
 
 NOTE: You can also use the Okta Admin Console to create your app. See [Create a Spring Boot App](https://developer.okta.com/docs/guides/sign-into-web-app/springboot/create-okta-application/) for more information.
 
-#### Server Configuration
-
-Copy the values from `application.properties` into `src/main/resources/application.yml` and delete `application.properties`.
-
-```yaml
-spring:
-  profiles:
-    active: @spring.profiles.active@
-  security:
-    oauth2:
-      client:
-        registration:
-          okta:
-            client-id: {clientId}
-            client-secret: {clientSecret}
-            scope: openid, email, profile
-        provider:
-          okta:
-            issuer-uri: https://{yourOktaDomain}/oauth2/default
-```
-
 Run `./mvnw spring-boot:run -Pprod` and log in to your app at `http://localhost:8080`.
 
 ## Links
@@ -94,7 +73,7 @@ This example uses the following open source libraries:
 
 ## Help
 
-Please post any questions as comments on the [blog post](https://developer.okta.com/blog/2018/07/19/simple-crud-react-and-spring-boot), or visit our [Okta Developer Forums](https://devforum.okta.com/). You can also email developers@okta.com if you'd like to create a support ticket.
+Please post any questions as comments on the [blog post](https://developer.okta.com/blog/2022/06/16/simple-crud-react-and-spring-boot), or visit our [Okta Developer Forums](https://devforum.okta.com/). You can also email developers@okta.com if you'd like to create a support ticket.
 
 ## License
 
