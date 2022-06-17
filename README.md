@@ -2,7 +2,7 @@
  
 This example app shows how to create a Spring Boot API and CRUD (create, read, update, and delete) its data with a React app.
 
-Please read [Use React and Spring Boot to Build a Simple CRUD App](https://developer.okta.com/2022/06/16/simple-crud-react-and-spring-boot) to see how this app was created.
+Please read [Use React and Spring Boot to Build a Simple CRUD App](https://developer.okta.com/blog/2022/06/17/simple-crud-react-and-spring-boot) to see how this app was created.
 
 **Prerequisites:** [Java 8](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html), [Node.js 8+](https://nodejs.org/), and [Yarn](https://yarnpkg.com/en/docs/install). You can use npm instead of Yarn, but you'll need to translate the Yarn syntax to npm.
 
