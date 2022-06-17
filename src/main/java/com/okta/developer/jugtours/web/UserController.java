@@ -37,7 +37,7 @@ public class UserController {
                                     @AuthenticationPrincipal(expression = "idToken") OidcIdToken idToken) {
         // send logout URL to client so they can initiate logout
         String logoutUrl = this.registration.getProviderDetails()
-                .getConfigurationMetadata().get("end_session_endpoint").toString();
+            .getConfigurationMetadata().get("end_session_endpoint").toString();
 
         Map<String, String> logoutDetails = new HashMap<>();
         logoutDetails.put("logoutUrl", logoutUrl);

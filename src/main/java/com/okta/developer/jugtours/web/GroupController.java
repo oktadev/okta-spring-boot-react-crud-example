@@ -42,7 +42,7 @@ class GroupController {
     ResponseEntity<?> getGroup(@PathVariable Long id) {
         Optional<Group> group = groupRepository.findById(id);
         return group.map(response -> ResponseEntity.ok().body(response))
-                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+            .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     @PostMapping("/group")
@@ -55,11 +55,11 @@ class GroupController {
         // check to see if user already exists
         Optional<User> user = userRepository.findById(userId);
         group.setUser(user.orElse(new User(userId,
-                details.get("name").toString(), details.get("email").toString())));
+            details.get("name").toString(), details.get("email").toString())));
 
         Group result = groupRepository.save(group);
         return ResponseEntity.created(new URI("/api/group/" + result.getId()))
-                .body(result);
+            .body(result);
     }
 
     @PutMapping("/group/{id}")
