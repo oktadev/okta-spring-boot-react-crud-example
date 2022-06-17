@@ -19,7 +19,7 @@ const GroupList = () => {
         setGroups(data);
         setLoading(false);
       })
-  }, [setGroups, setLoading]);
+  }, []);
 
   const remove = async (id) => {
     await fetch(`/api/group/${id}`, {
