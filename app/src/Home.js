@@ -32,7 +32,7 @@ const Home = () => {
     if (port === ':3000') {
       port = ':8080';
     }
-    window.location.href = '//' + window.location.hostname + port + '/private';
+    window.location.href = `//${window.location.hostname}${port}/private`;
   }
 
   const logout = () => {
@@ -42,8 +42,8 @@ const Home = () => {
     })
       .then(res => res.json())
       .then(response => {
-        window.location.href = response.logoutUrl + "?id_token_hint=" +
-          response.idToken + "&post_logout_redirect_uri=" + window.location.origin;
+        window.location.href = `${response.logoutUrl}?id_token_hint=${response.idToken}`
+          + `&post_logout_redirect_uri=${window.location.origin}`;
       });
   }
 
