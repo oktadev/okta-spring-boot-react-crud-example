@@ -32,7 +32,6 @@ public class SecurityConfiguration {
     }
 
     @Bean
-    @Profile("dev")
     public RequestCache refererRequestCache() {
         return new HttpSessionRequestCache() {
             @Override
