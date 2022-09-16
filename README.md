@@ -4,7 +4,7 @@ This example app shows how to create a Spring Boot API and CRUD (create, read, u
 
 Please read [Use React and Spring Boot to Build a Simple CRUD App](https://developer.okta.com/blog/2022/06/17/simple-crud-react-and-spring-boot) to see how this app was created.
 
-**Prerequisites:** [Java 11](http://sdkman.io) and [Node.js 16+](https://nodejs.org/)
+**Prerequisites:** [Java 17](http://sdkman.io) and [Node.js 16+](https://nodejs.org/)
 
 > [Okta](https://developer.okta.com/) has Authentication and User Management APIs that reduce development time with instant-on, scalable user infrastructure. Okta's intuitive API and expert support make it easy for developers to authenticate, manage, and secure users and roles in any application.
 
