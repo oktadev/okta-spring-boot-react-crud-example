@@ -42,8 +42,7 @@ const Home = () => {
     })
       .then(res => res.json())
       .then(response => {
-        window.location.href = `${response.logoutUrl}?id_token_hint=${response.idToken}`
-          + `&post_logout_redirect_uri=${window.location.origin}`;
+        window.location.href = `${response.logoutUrl}&returnTo=${window.location.origin}`;
       });
   }
 
