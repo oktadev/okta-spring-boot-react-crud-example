@@ -63,6 +63,33 @@ NOTE: You can also use the Okta Admin Console to create your app. See [Create a 
 
 Run `./mvnw spring-boot:run -Pprod` and log in to your app at `http://localhost:8080`.
 
+### Use Auth0 for OpenID Connect
+
+If you'd rather use Auth0, that's possible too! First, you'll need to checkout the `auth0` branch of this repository.
+
+```bash
+git clone -b auth0 https://github.com/oktadev/okta-spring-boot-react-crud-example.git spring-react
+cd spring-react
+```
+
+Then, install the [Auth0 CLI](https://github.com/auth0/auth0-cli) and run `auth0 login` in a terminal.
+
+Next, run `auth0 apps create`, provide a memorable name, and select **Regular Web Application**. Specify `http://localhost:8080/login/oauth2/code/auth0` for the Callback URLs and `http://localhost:3000,http://localhost:8080` for the Allowed Logout URLs.
+
+Modify your `src/main/resources/application.properties` to include your Auth0 issuer, client ID, and client secret. You will have run `auth0 apps open` and select the app you created to copy your client secret.
+
+```properties
+# make sure to include the trailing slash for the Auth0 issuer
+spring.security.oauth2.client.provider.auth0.issuer-uri: https://<your-auth0-domain>/
+spring.security.oauth2.client.registration.auth0.client-id: <your-client-id>
+spring.security.oauth2.client.registration.auth0.client-secret: <your-client-secret>
+spring.security.oauth2.client.registration.auth0.scope=openid,profile,email
+```
+
+NOTE: You can also use your [Auth0 dashboard](https://manage.auth0.com) to configure your application. Just make sure to use the same URLs specified above.
+
+Run `./mvnw spring-boot:run -Pprod` and log in to your app at `http://localhost:8080`.
+
 ## Links
 
 This example uses the following open source libraries:
