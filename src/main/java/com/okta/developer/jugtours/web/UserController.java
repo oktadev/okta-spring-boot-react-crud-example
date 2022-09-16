@@ -1,5 +1,6 @@
 package com.okta.developer.jugtours.web;
 
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -20,7 +21,7 @@ public class UserController {
     private ClientRegistration registration;
 
     public UserController(ClientRegistrationRepository registrations) {
-        this.registration = registrations.findByRegistrationId("okta");
+        this.registration = registrations.findByRegistrationId("auth0");
     }
 
     @GetMapping("/api/user")
@@ -35,14 +36,15 @@ public class UserController {
     @PostMapping("/api/logout")
     public ResponseEntity<?> logout(HttpServletRequest request,
                                     @AuthenticationPrincipal(expression = "idToken") OidcIdToken idToken) {
-        // send logout URL to client so they can initiate logout
-        String logoutUrl = this.registration.getProviderDetails()
-            .getConfigurationMetadata().get("end_session_endpoint").toString();
 
-        Map<String, String> logoutDetails = new HashMap<>();
-        logoutDetails.put("logoutUrl", logoutUrl);
-        logoutDetails.put("idToken", idToken.getTokenValue());
-        request.getSession(false).invalidate();
-        return ResponseEntity.ok().body(logoutDetails);
+        StringBuilder logoutUrl = new StringBuilder();
+        String issuerUri = this.registration.getProviderDetails().getIssuerUri();
+        logoutUrl.append(issuerUri.endsWith("/") ? issuerUri + "v2/logout" : issuerUri + "/v2/logout");
+
+        String originUrl = request.getHeader(HttpHeaders.ORIGIN);
+        logoutUrl.append("?client_id=").append(this.registration.getClientId()).append("&returnTo=").append(originUrl);
+
+        request.getSession().invalidate();
+        return ResponseEntity.ok().body(Map.of("logoutUrl", logoutUrl.toString()));
     }
 }
