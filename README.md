@@ -80,9 +80,9 @@ Modify your `src/main/resources/application.properties` to include your Auth0 is
 
 ```properties
 # make sure to include the trailing slash for the Auth0 issuer
-spring.security.oauth2.client.provider.auth0.issuer-uri: https://<your-auth0-domain>/
-spring.security.oauth2.client.registration.auth0.client-id: <your-client-id>
-spring.security.oauth2.client.registration.auth0.client-secret: <your-client-secret>
+spring.security.oauth2.client.provider.auth0.issuer-uri=https://<your-auth0-domain>/
+spring.security.oauth2.client.registration.auth0.client-id=<your-client-id>
+spring.security.oauth2.client.registration.auth0.client-secret=<your-client-secret>
 spring.security.oauth2.client.registration.auth0.scope=openid,profile,email
 ```
 
