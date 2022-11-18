@@ -11,7 +11,10 @@ Today, I'll show you how to create a basic CRUD app with Spring Boot and React. 
 
 - http://sdkman.io[Java 17]
 - https://nodejs.org/[Node 16]
+// 18.12.1 is LTS
 - https://github.com/okta/okta-cli[Okta CLI]
+
+TIP: The brackets at the end of some steps indicate the IntelliJ Live Templates to use. You can find the template definitions at https://github.com/mraible/idea-live-templates[mraible/idea-live-templates].
 
 toc::[]
 
@@ -19,6 +22,7 @@ toc::[]
 
 . Navigate to https://start.spring.io[start.spring.io] and make the following selections:
 
+* **Project:** `Maven Project`
 * **Group:** `com.okta.developer`
 * **Artifact:** `jugtours`
 * **Dependencies**: `JPA`, `H2`, `Web`, `Lombok`
@@ -27,8 +31,11 @@ toc::[]
 
 === Add a JPA domain model
 
-. Create a `src/main/java/com/okta/developer/jugtours/model` directory and a `Group.java` class in it.
+. Create a `src/main/java/com/okta/developer/jugtours/model` directory and a `Group.java` class in it. [`group`]
 +
+.`Group.java`
+[%collapsible]
+====
 [source,java]
 ----
 package com.okta.developer.jugtours.model;
@@ -65,9 +72,13 @@ public class Group {
     private Set<Event> events;
 }
 ----
+====
 
-. Create an `Event.java` class in the same package.
+. Create an `Event.java` class in the same package. [`event`]
 +
+.`Event.java`
+[%collapsible]
+====
 [source,java]
 ----
 package com.okta.developer.jugtours.model;
@@ -101,9 +112,13 @@ public class Event {
     private Set<User> attendees;
 }
 ----
+====
 
-. And a `User.java` class.
+. And a `User.java` class. [`user`]
 +
+.`User.java`
+[%collapsible]
+====
 [source,java]
 ----
 package com.okta.developer.jugtours.model;
@@ -114,11 +129,13 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Table(name = "users")
 public class User {
 
     @Id
@@ -126,10 +143,15 @@ public class User {
     private String name;
     private String email;
 }
-----
 
-. Create a `GroupRepository.java` to manage the group entity.
+----
+====
+
+. Create a `GroupRepository.java` to manage the group entity. [`group-repo`]
 +
+.`GroupRepository.java`
+[%collapsible]
+====
 [source,java]
 ----
 package com.okta.developer.jugtours.model;
@@ -142,9 +164,13 @@ public interface GroupRepository extends JpaRepository<Group, Long> {
     Group findByName(String name);
 }
 ----
+====
 
-. To load some default data, create an `Initializer.java` class in the `com.okta.developer.jugtours` package.
+. To load some default data, create an `Initializer.java` class in the `com.okta.developer.jugtours` package. [`initializer`]
 +
+.`Initializer.java`
+[%collapsible]
+====
 [source,java]
 ----
 package com.okta.developer.jugtours;
@@ -187,26 +213,17 @@ class Initializer implements CommandLineRunner {
     }
 }
 ----
+====
 +
 TIP: If your IDE has issues with `Event.builder()`, you need to turn on annotation processing and/or install the Lombok plugin. I had to uninstall/reinstall the Lombok plugin in IntelliJ IDEA to get things to work.
 +
-**todo: 👀**
-If you start your app (using `./mvnw spring-boot:run`), it will fail because Spring Boot 2.7.0 forces H2 v2.0. The H2 2.0 ecosystem doesn't seem like it's quite ready for prime time, so I recommend you downgrade to H2 version `1.4.200` in your `pom.xml`.
+. Start your app with `mvn spring-boot:run` and you should see groups and events being created.
+
+. Add a `GroupController.java` class (in `src/main/java/.../jugtours/web`) that allows you to CRUD groups. [`group-controller`]
 +
-[source,xml]
-----
-<dependency>
-  <groupId>com.h2database</groupId>
-  <artifactId>h2</artifactId>
-  <scope>runtime</scope>
-  <version>1.4.200</version>
-</dependency>
-----
-+
-Run `mvn spring-boot:run` again, and you should see groups and events being created.
-+
-Add a `GroupController.java` class (in `src/main/java/.../jugtours/web`) that allows you to CRUD groups.
-+
+.`GroupController.java`
+[%collapsible]
+====
 [source,java]
 ----
 package com.okta.developer.jugtours.web;
@@ -271,6 +288,7 @@ class GroupController {
     }
 }
 ----
+====
 
 . Add the following dependency to your `pom.xml` to fix compilation errors:
 +
@@ -283,9 +301,11 @@ class GroupController {
 </dependency>
 ----
 
-. Hit `http://localhost:8080/api/groups` with HTTPie and you should see the list of groups.
+. Hit `http://localhost:8080/api/groups` with https://httpie.org[HTTPie] and you should see the list of groups.
 
-. You can create, read, update, and delete groups with the following https://httpie.org[HTTPie] commands.
+    http :8080/api/groups
+
+. You can create, read, update, and delete groups with the following commands.
 +
 [source,shell]
 ----
@@ -302,7 +322,6 @@ http DELETE :8080/api/group/6
 [source,shell]
 ----
 npx create-react-app@5 app
-// todo react v18
 ----
 
 . After the app creation process completes, navigate into the `app` directory and install Bootstrap, cookie support for React, React Router, and Reactstrap.
@@ -313,7 +332,7 @@ cd app
 npm i bootstrap@5 react-cookie@4 react-router-dom@6 reactstrap@9
 ----
 
-Add Bootstrap's CSS file as an import in `app/src/index.js`.
+. Add Bootstrap's CSS file as an import in `app/src/index.js`.
 +
 [source,js]
 ----
@@ -322,8 +341,11 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 == Call your Spring Boot API and display the results
 
-. Modify `app/src/App.js` to use the following code that calls `/api/groups` and displays the list in the UI.
+. Modify `app/src/App.js` to use the following code that calls `/api/groups` and displays the list in the UI. [`app.js`]
 +
+.`App.js`
+[%collapsible]
+====
 [source,jsx]
 ----
 import React, { useEffect, useState } from 'react';
@@ -369,6 +391,7 @@ const App = () => {
 
 export default App;
 ----
+====
 
 . To proxy from `/api` to `http://localhost:8080/api`, add a proxy setting to `app/package.json`.
 +
@@ -382,8 +405,11 @@ export default App;
 
 == Build a React `GroupList` component
 
-. React is all about components, and you don't want to render everything in your main `App`, so create `app/src/GroupList.js` and populate it with the following JavaScript.
+. React is all about components, and you don't want to render everything in your main `App`, so create `app/src/GroupList.js` and populate it with the following JavaScript. [`group-list.js`]
 +
+.`GroupList.js`
+[%collapsible]
+====
 [source,jsx]
 ----
 import React, { useEffect, useState } from 'react';
@@ -473,9 +499,13 @@ const GroupList = () => {
 
 export default GroupList;
 ----
+====
 
-. Create `AppNavbar.js` in the same directory to establish a common UI feature between components.
+. Create `AppNavbar.js` in the same directory to establish a common UI feature between components. [`navbar.js`]
 +
+.`AppNavbar.js`
+[%collapsible]
+====
 [source,jsx]
 ----
 import React, { useState } from 'react';
@@ -506,9 +536,13 @@ const AppNavbar = () => {
 
 export default AppNavbar;
 ----
+====
 
-. Create `app/src/Home.js` to serve as the landing page for your app.
+. Create `app/src/Home.js` to serve as the landing page for your app. [`home.js`]
 +
+.`Home.js`
+[%collapsible]
+====
 [source,jsx]
 ----
 import React from 'react';
@@ -530,9 +564,13 @@ const Home = () => {
 
 export default Home;
 ----
+====
 
-. Also, change `app/src/App.js` to use React Router to navigate between components.
+. Also, change `app/src/App.js` to use React Router to navigate between components. [`app-router`]
 +
+.`App.js`
+[%collapsible]
+====
 [source,jsx]
 ----
 import React from 'react';
@@ -540,14 +578,13 @@ import './App.css';
 import Home from './Home';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import GroupList from './GroupList';
-import GroupEdit from './GroupEdit';
 
 const App = () => {
   return (
     <Router>
       <Routes>
         <Route exact path="/" element={<Home/>}/>
-        <Route path='/groups' exact={true} element={<GroupList/>}/>
+        <Route path="/groups" exact={true} element={<GroupList/>}/>
       </Routes>
     </Router>
   )
@@ -555,6 +592,7 @@ const App = () => {
 
 export default App;
 ----
+====
 
 . To make your UI a bit more spacious, add a top margin to Bootstrap's container classes in `app/src/App.css`.
 +
@@ -565,14 +603,17 @@ nav + .container, nav + .container-fluid {
 }
 ----
 
-. Your React app should update itself as you make changes, and you should see a screen like the following at `http://localhost:3000`.
+. Your React app should update itself as you make changes at `http://localhost:3000`.
 
 . Click on **Manage JUG Tour** and you should see a list of the default groups.
 
 == Add a React `GroupEdit` component
 
-. Create `app/src/GroupEdit.js` and use `useEffect()` to fetch the group resource with the ID from the URL.
+. Create `app/src/GroupEdit.js` and use `useEffect()` to fetch the group resource with the ID from the URL. [`group-edit.js`]
 +
+.`GroupEdit.js`
+[%collapsible]
+====
 [source,jsx]
 ----
 import React, { useEffect, useState } from 'react';
@@ -673,6 +714,7 @@ const GroupEdit = () => {
 
 export default GroupEdit;
 ----
+====
 
 . Modify `app/src/App.js` to import `GroupEdit` and specify a path to it.
 +
@@ -685,7 +727,7 @@ const App = () => {
     <Router>
       <Routes>
         ...
-        <Route path='/groups/:id' element={<GroupEdit/>}/>
+        <Route path="/groups/:id" element={<GroupEdit/>}/>
       </Routes>
     </Router>
   )
@@ -693,6 +735,8 @@ const App = () => {
 ----
 
 Now you should be able to add and edit groups!
+
+todo: add Auth0
 
 == Add authentication with Okta
 
@@ -703,17 +747,17 @@ Now you should be able to add and edit groups!
 <dependency>
     <groupId>com.okta.spring</groupId>
     <artifactId>okta-spring-boot-starter</artifactId>
-    <version>2.1.5</version>
+    <version>2.1.6</version>
 </dependency>
 ----
 
 . Install the https://cli.okta.com/[Okta CLI] and run `okta login`. Then, run `okta apps create`. Select the default app name, or change it as you see fit. Choose **Web** and press **Enter**.
 +
-Select **Okta Spring Boot Starter**. Then, change the Redirect URI to `\http://localhost:8080/login/oauth2/code/okta` and use `\http://localhost:3000,http://localhost:8080` for the Logout Redirect URI.
+Select **Okta Spring Boot Starter**. Accept the default Redirect URI and use `\http://localhost:3000,http://localhost:8080` for the Logout Redirect URI.
 
 == Configure Spring Security for React and user identity
 
-. To make Spring Security React-friendly, create a `SecurityConfiguration.java` file in `src/main/java/.../jugtours/config`.
+. To make Spring Security React-friendly, create a `SecurityConfiguration.java` file in `src/main/java/.../jugtours/config`. [`security-config`]
 +
 ====
 [source,java]
@@ -723,7 +767,6 @@ package com.okta.developer.jugtours.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
@@ -772,8 +815,11 @@ public class SecurityConfiguration {
 . It saves the referrer header (misspelled `referer` in real life), so Spring Security can redirect back to it after authentication.
 ====
 
-. Create `src/main/java/.../jugtours/web/UserController.java` and populate it with the following code. This API will be used by React to 1) find out if a user is authenticated, and 2) perform global logout.
+. Create `src/main/java/.../jugtours/web/UserController.java` and populate it with the following code. This API will be used by React to 1) find out if a user is authenticated, and 2) perform global logout. [`user-controller`]
 +
+.`UserController.java`
+[%collapsible]
+====
 [source,java]
 ----
 package com.okta.developer.jugtours.web;
@@ -825,6 +871,7 @@ public class UserController {
     }
 }
 ----
+====
 
 . You'll also want to add user information when creating groups so that you can filter by _your_ JUG tour. Add a `UserRepository.java` in the same directory as `GroupRepository.java`.
 +
@@ -849,28 +896,6 @@ List<Group> findAllByUserId(String id);
 +
 [source,java]
 ----
-package com.okta.developer.jugtours.web;
-
-import com.okta.developer.jugtours.model.Group;
-import com.okta.developer.jugtours.model.GroupRepository;
-import com.okta.developer.jugtours.model.User;
-import com.okta.developer.jugtours.model.UserRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.oauth2.core.user.OAuth2User;
-import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.security.Principal;
-import java.util.Collection;
-import java.util.Map;
-import java.util.Optional;
-
 @RestController
 @RequestMapping("/api")
 class GroupController {
@@ -889,12 +914,7 @@ class GroupController {
         return groupRepository.findAllByUserId(principal.getName());
     }
 
-    @GetMapping("/group/{id}")
-    ResponseEntity<?> getGroup(@PathVariable Long id) {
-        Optional<Group> group = groupRepository.findById(id);
-        return group.map(response -> ResponseEntity.ok().body(response))
-                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
-    }
+    ...
 
     @PostMapping("/group")
     ResponseEntity<Group> createGroup(@Valid @RequestBody Group group,
@@ -913,19 +933,7 @@ class GroupController {
                 .body(result);
     }
 
-    @PutMapping("/group/{id}")
-    ResponseEntity<Group> updateGroup(@Valid @RequestBody Group group) {
-        log.info("Request to update group: {}", group);
-        Group result = groupRepository.save(group);
-        return ResponseEntity.ok().body(result);
-    }
-
-    @DeleteMapping("/group/{id}")
-    public ResponseEntity<?> deleteGroup(@PathVariable Long id) {
-        log.info("Request to delete group: {}", id);
-        groupRepository.deleteById(id);
-        return ResponseEntity.ok().build();
-    }
+    ...
 }
 ----
 
@@ -933,7 +941,7 @@ class GroupController {
 
 You'll need to make a few changes to your React components to make them identity-aware.
 
-. The first thing you'll want to do is modify `src/index.js` to wrap everything in a `CookieProvider`. This component allows you to read the CSRF cookie and send it back as a header.
+. Modify `src/index.js` to wrap everything in a `CookieProvider`. This component allows you to read the CSRF cookie and send it back as a header.
 +
 [source,jsx]
 ----
@@ -949,7 +957,7 @@ root.render(
 );
 ----
 
-. Modify `app/src/Home.js` to call `/api/user` to see if the user is logged in. If they're not, show a `Login` button.
+. Modify `app/src/Home.js` to call `/api/user` to see if the user is logged in. If they're not, show a `Login` button. [`home-auth`]
 +
 ====
 [source,jsx]
@@ -1114,15 +1122,18 @@ After all these changes, you should be able to restart both Spring Boot and Reac
 
 To build and package your React app with Maven, you can use the https://github.com/eirslett/frontend-maven-plugin[frontend-maven-plugin] and Maven's profiles to activate it.
 
-. Add properties for versions and a `<profiles>` section to your `pom.xml`.
+. Add properties for versions and a `<profiles>` section to your `pom.xml`. [`profiles`]
 +
+.`pom.xml`
+[%collapsible]
+====
 [source,xml]
 ----
 <properties>
     ...
     <frontend-maven-plugin.version>1.12.1</frontend-maven-plugin.version>
-    <node.version>v16.15.1</node.version>
-    <npm.version>v8.6.0</npm.version>
+    <node.version>v16.18.1</node.version>
+    <npm.version>v8.19.2</npm.version>
 </properties>
 
 <profiles>
@@ -1217,6 +1228,7 @@ To build and package your React app with Maven, you can use the https://github.c
     </profile>
 </profiles>
 ----
+====
 +
 Add the active profile setting to `src/main/resources/application.properties`:
 +
