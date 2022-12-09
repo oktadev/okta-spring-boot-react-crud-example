@@ -9,9 +9,11 @@ const AppNavbar = () => {
   return (
     <Navbar color="dark" dark expand="md">
       <NavbarBrand tag={Link} to="/">Home</NavbarBrand>
-      <NavbarToggler onClick={() => { setIsOpen(!isOpen) }}/>
+      <NavbarToggler onClick={() => {
+        setIsOpen(!isOpen)
+      }}/>
       <Collapse isOpen={isOpen} navbar>
-        <Nav className="justify-content-end" style={{width: "100%"}} navbar>
+        <Nav className="justify-content-end" style={{ width: "100%" }} navbar>
           <NavItem>
             <NavLink href="https://twitter.com/oktadev">@oktadev</NavLink>
           </NavItem>

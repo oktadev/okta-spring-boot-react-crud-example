@@ -43,7 +43,7 @@ const GroupList = () => {
   const groupList = groups.map(group => {
     const address = `${group.address || ''} ${group.city || ''} ${group.stateOrProvince || ''}`;
     return <tr key={group.id}>
-      <td style={{whiteSpace: 'nowrap'}}>{group.name}</td>
+      <td style={{ whiteSpace: 'nowrap' }}>{group.name}</td>
       <td>{address}</td>
       <td>{group.events.map(event => {
         return <div key={event.id}>{new Intl.DateTimeFormat('en-US', {

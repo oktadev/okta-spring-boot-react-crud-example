@@ -36,7 +36,7 @@ const GroupEdit = () => {
     event.preventDefault();
 
     await fetch(`/api/group${group.id ? `/${group.id}` : ''}`, {
-      method: group.id ? 'PUT' : 'POST',
+      method: (group.id) ? 'PUT' : 'POST',
       headers: {
         'X-XSRF-TOKEN': cookies['XSRF-TOKEN'],
         'Accept': 'application/json',
