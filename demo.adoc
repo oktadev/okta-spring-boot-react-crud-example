@@ -829,7 +829,7 @@ window.location.href = `${response.logoutUrl}?id_token_hint=${response.idToken}`
   + `&post_logout_redirect_uri=${window.location.origin}`;
 ----
 
-TIP: You can see all the differences between Okta and Auth0 by https://github.com/oktadev/okta-spring-boot-react-crud-example/compare/main...auth0[comparing their branches on GitHub].
+TIP: You can see all the differences between Okta and Auth0 by https://github.com/oktadev/okta-spring-boot-react-crud-example/compare/main\...auth0[comparing their branches on GitHub].
 
 == Configure Spring Security for React and user identity
 
