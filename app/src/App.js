@@ -10,8 +10,8 @@ const App = () => {
     <Router>
       <Routes>
         <Route exact path="/" element={<Home/>}/>
-        <Route path='/groups' exact={true} element={<GroupList/>}/>
-        <Route path='/groups/:id' element={<GroupEdit/>}/>
+        <Route path="/groups" exact={true} element={<GroupList/>}/>
+        <Route path="/groups/:id" exact={true} element={<GroupEdit/>}/>
       </Routes>
     </Router>
   )
