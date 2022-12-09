@@ -307,9 +307,9 @@ class GroupController {
 [source,shell]
 ----
 http POST :8080/api/group name='Utah JUG' city='Salt Lake City' country=USA
-http :8080/api/group/6
-http PUT :8080/api/group/6 id=6 name='Utah JUG' address='On the slopes'
-http DELETE :8080/api/group/6
+http :8080/api/group/5
+http PUT :8080/api/group/5 id=6 name='Utah JUG' address='On the slopes'
+http DELETE :8080/api/group/5
 ----
 
 == Create a React UI with Create React App
@@ -735,7 +735,7 @@ Now you should be able to add and edit groups!
 
 == Add Authentication with Auth0
 
-. Add the necessary Spring Security dependencies to do OIDC authentication. [`spring-security-auth0`]
+. Add the necessary Spring Security dependencies to do OIDC authentication. [`sbr-spring-oauth`]
 +
 [source,xml]
 ----
@@ -776,7 +776,7 @@ spring.security.oauth2.client.registration.auth0.scope=openid,profile,email
 +
 Of course, you can also use your https://manage.auth0.com[Auth0 dashboard] to configure your application. Just make sure to use the same URLs specified above.
 
-== Add authentication with Okta
+== Add Authentication with Okta
 
 . Add the Okta Spring Boot starter to do OIDC authentication.
 +
@@ -1025,10 +1025,14 @@ List<Group> findAllByUserId(String id);
 +
 [source,java]
 ----
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+...
+
 @GetMapping("/groups")
 Collection<Group> groups(Principal principal) {
     return groupRepository.findAllByUserId(principal.getName());
 }
+...
 
 @PostMapping("/group")
 ResponseEntity<Group> createGroup(@Valid @RequestBody Group group,
@@ -1052,7 +1056,7 @@ ResponseEntity<Group> createGroup(@Valid @RequestBody Group group,
 
 You'll need to make a few changes to your React components to make them identity-aware.
 
-. Modify `src/index.js` to wrap everything in a `CookieProvider`. This component allows you to read the CSRF cookie and send it back as a header.
+. Modify `index.js` to wrap everything in a `CookieProvider`. This component allows you to read the CSRF cookie and send it back as a header.
 +
 [source,jsx]
 ----
@@ -1068,7 +1072,7 @@ root.render(
 );
 ----
 
-. Modify `app/src/Home.js` to call `/api/user` to see if the user is logged in. If they're not, show a `Login` button. [`sbr-home-auth`]
+. Modify `Home.js` to call `/api/user` to see if the user is logged in. If they're not, show a `Login` button. [`sbr-home-auth`]
 +
 ====
 [source,jsx]
@@ -1156,7 +1160,7 @@ export default Home;
 . The CSRF cookie from Spring Security has a different name than the header you need to send back. The cookie name is `XSRF-TOKEN`, while the header name is `X-XSRF-TOKEN`.
 ====
 
-. Update `app/src/GroupList.js` to have similar changes.
+. Update `GroupList.js` to have similar changes.
 +
 [source,jsx]
 ----
@@ -1352,6 +1356,9 @@ spring.profiles.active=@spring.profiles.active@
 
 . Everything will work just fine if you start at the root, since React will handle routing. However, if you refresh the page when you're at `http://localhost:8080/groups`, you'll get a 404 error since Spring Boot doesn't have a route for `/groups`. To fix this, add a `SpaWebFilter` that conditionally forwards to the React app. [`sbr-spa`]
 +
+.`SpaWebFilter.java`
+[%collapsible]
+====
 [source,java]
 ----
 package com.okta.developer.jugtours.web;
@@ -1385,6 +1392,7 @@ public class SpaWebFilter extends OncePerRequestFilter {
     }
 }
 ----
+====
 
 . And add it to `SecurityConfiguration.java`:
 +
