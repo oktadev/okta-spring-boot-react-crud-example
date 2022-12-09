@@ -10,11 +10,11 @@ const Home = () => {
   const [authenticated, setAuthenticated] = useState(false);
   const [loading, setLoading] = useState(false);
   const [user, setUser] = useState(undefined);
-  const [cookies] = useCookies(['XSRF-TOKEN']);
+  const [cookies] = useCookies(['XSRF-TOKEN']); // <.>
 
   useEffect(() => {
     setLoading(true);
-    fetch('api/user', { credentials: 'include' })
+    fetch('api/user', { credentials: 'include' }) // <.>
       .then(response => response.text())
       .then(body => {
         if (body === '') {
@@ -32,13 +32,13 @@ const Home = () => {
     if (port === ':3000') {
       port = ':8080';
     }
-    window.location.href = `//${window.location.hostname}${port}/private`;
+    window.location.href = `//${window.location.hostname}${port}/api/private`;
   }
 
   const logout = () => {
     fetch('/api/logout', {
       method: 'POST', credentials: 'include',
-      headers: { 'X-XSRF-TOKEN': cookies['XSRF-TOKEN'] }
+      headers: { 'X-XSRF-TOKEN': cookies['XSRF-TOKEN'] } // <.>
     })
       .then(res => res.json())
       .then(response => {
