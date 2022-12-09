@@ -10,7 +10,7 @@ Today, I'll show you how to create a basic CRUD app with Spring Boot and React. 
 **Prerequisites**:
 
 - http://sdkman.io[Java 17]
-- https://nodejs.org/[Node 18]
+- https://nodejs.org/[Node 16]
 - https://github.com/okta/okta-cli[Okta CLI]
 
 TIP: The brackets at the end of some steps indicate the IntelliJ Live Templates to use. You can find the template definitions at https://github.com/mraible/idea-live-templates[mraible/idea-live-templates].
@@ -30,7 +30,7 @@ toc::[]
 
 === Add a JPA domain model
 
-. Create a `src/main/java/com/okta/developer/jugtours/model` directory and a `Group.java` class in it. [`group`]
+. Create a `src/main/java/com/okta/developer/jugtours/model` directory and a `Group.java` class in it. [`sbr-group`]
 +
 .`Group.java`
 [%collapsible]
@@ -44,7 +44,7 @@ import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.util.Set;
 
 @Data
@@ -73,7 +73,7 @@ public class Group {
 ----
 ====
 
-. Create an `Event.java` class in the same package. [`event`]
+. Create an `Event.java` class in the same package. [`sbr-event`]
 +
 .`Event.java`
 [%collapsible]
@@ -87,10 +87,10 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.ManyToMany;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
 import java.time.Instant;
 import java.util.Set;
 
@@ -113,7 +113,7 @@ public class Event {
 ----
 ====
 
-. And a `User.java` class. [`user`]
+. And a `User.java` class. [`sbr-user`]
 +
 .`User.java`
 [%collapsible]
@@ -126,9 +126,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
 @Data
 @NoArgsConstructor
@@ -142,11 +142,10 @@ public class User {
     private String name;
     private String email;
 }
-
 ----
 ====
 
-. Create a `GroupRepository.java` to manage the group entity. [`group-repo`]
+. Create a `GroupRepository.java` to manage the group entity. [`sbr-group-repo`]
 +
 .`GroupRepository.java`
 [%collapsible]
@@ -165,7 +164,7 @@ public interface GroupRepository extends JpaRepository<Group, Long> {
 ----
 ====
 
-. To load some default data, create an `Initializer.java` class in the `com.okta.developer.jugtours` package. [`initializer`]
+. To load some default data, create an `Initializer.java` class in the `com.okta.developer.jugtours` package. [`sbr-init`]
 +
 .`Initializer.java`
 [%collapsible]
@@ -218,7 +217,7 @@ TIP: If your IDE has issues with `Event.builder()`, you need to turn on annotati
 +
 . Start your app with `mvn spring-boot:run` and you should see groups and events being created.
 
-. Add a `GroupController.java` class (in `src/main/java/.../jugtours/web`) that allows you to CRUD groups. [`group-controller`]
+. Add a `GroupController.java` class (in `src/main/java/.../jugtours/web`) that allows you to CRUD groups. [`sbr-group-controller`]
 +
 .`GroupController.java`
 [%collapsible]
@@ -235,7 +234,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Collection;
@@ -294,13 +293,12 @@ class GroupController {
 [source,xml]
 ----
 <dependency>
-  <groupId>jakarta.validation</groupId>
-  <artifactId>jakarta.validation-api</artifactId>
-  <version>2.0.2</version>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-validation</artifactId>
 </dependency>
 ----
 
-. Hit `http://localhost:8080/api/groups` with https://httpie.org[HTTPie] and you should see the list of groups.
+. Restart the app and hit `http://localhost:8080/api/groups` with https://httpie.org[HTTPie] and you should see the list of groups.
 
     http :8080/api/groups
 
@@ -309,14 +307,14 @@ class GroupController {
 [source,shell]
 ----
 http POST :8080/api/group name='Utah JUG' city='Salt Lake City' country=USA
-http :8080/api/group/6
-http PUT :8080/api/group/6 id=6 name='Utah JUG' address='On the slopes'
-http DELETE :8080/api/group/6
+http :8080/api/group/5
+http PUT :8080/api/group/5 id=6 name='Utah JUG' address='On the slopes'
+http DELETE :8080/api/group/5
 ----
 
 == Create a React UI with Create React App
 
-. Create a new project in the `jugtours` directory with `npx` and Create React App.
+. Create a new project in the root directory with `npx` and Create React App.
 +
 [source,shell]
 ----
@@ -340,9 +338,9 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 == Call your Spring Boot API and display the results
 
-. Modify `app/src/App.js` to use the following code that calls `/api/groups` and displays the list in the UI. [`app.js`]
+. Modify `App.js` to use the following code that calls `/api/groups` and displays the list in the UI. [`sbr-app`]
 +
-.`App.js`
+.`app/src/App.js`
 [%collapsible]
 ====
 [source,jsx]
@@ -404,9 +402,9 @@ export default App;
 
 == Build a React `GroupList` component
 
-. React is all about components, and you don't want to render everything in your main `App`, so create `app/src/GroupList.js` and populate it with the following JavaScript. [`group-list.js`]
+. React is all about components, and you don't want to render everything in your main `App`, so create `GroupList.js` and populate it with the following JavaScript. [`sbr-group-list`]
 +
-.`GroupList.js`
+.`src/app/GroupList.js`
 [%collapsible]
 ====
 [source,jsx]
@@ -500,9 +498,9 @@ export default GroupList;
 ----
 ====
 
-. Create `AppNavbar.js` in the same directory to establish a common UI feature between components. [`navbar.js`]
+. Create `AppNavbar.js` in the same directory to establish a common UI feature between components. [`sbr-navbar`]
 +
-.`AppNavbar.js`
+.`src/app/AppNavbar.js`
 [%collapsible]
 ====
 [source,jsx]
@@ -537,9 +535,9 @@ export default AppNavbar;
 ----
 ====
 
-. Create `app/src/Home.js` to serve as the landing page for your app. [`home.js`]
+. Create `Home.js` to serve as the landing page for your app. [`sbr-home`]
 +
-.`Home.js`
+.`src/app/Home.js`
 [%collapsible]
 ====
 [source,jsx]
@@ -565,9 +563,9 @@ export default Home;
 ----
 ====
 
-. Also, change `app/src/App.js` to use React Router to navigate between components. [`app-router`]
+. Also, change `App.js` to use React Router to navigate between components. [`sbr-app-router`]
 +
-.`App.js`
+.`src/app/App.js`
 [%collapsible]
 ====
 [source,jsx]
@@ -593,7 +591,7 @@ export default App;
 ----
 ====
 
-. To make your UI a bit more spacious, add a top margin to Bootstrap's container classes in `app/src/App.css`.
+. To make your UI a bit more spacious, add a top margin to Bootstrap's container classes in `App.css`.
 +
 [source,css]
 ----
@@ -608,9 +606,9 @@ nav + .container, nav + .container-fluid {
 
 == Add a React `GroupEdit` component
 
-. Create `app/src/GroupEdit.js` and use `useEffect()` to fetch the group resource with the ID from the URL. [`group-edit.js`]
+. Create `GroupEdit.js` and use `useEffect()` to fetch the group resource with the ID from the URL. [`sbr-group-edit`]
 +
-.`GroupEdit.js`
+.`app/src/GroupEdit.js`
 [%collapsible]
 ====
 [source,jsx]
@@ -715,7 +713,7 @@ export default GroupEdit;
 ----
 ====
 
-. Modify `app/src/App.js` to import `GroupEdit` and specify a path to it.
+. Modify `App.js` to import `GroupEdit` and specify a path to it.
 +
 [source,jsx]
 ----
@@ -737,7 +735,7 @@ Now you should be able to add and edit groups!
 
 == Add Authentication with Auth0
 
-. Add the necessary Spring Security dependencies to do OIDC authentication.
+. Add the necessary Spring Security dependencies to do OIDC authentication. [`sbr-spring-oauth`]
 +
 [source,xml]
 ----
@@ -759,13 +757,13 @@ Now you should be able to add and edit groups!
 </dependency>
 ----
 +
-NOTE: We hope to make the Okta Spring Boot starter https://github.com/okta/okta-spring-boot/issues/358[work with Auth0].
+NOTE: We hope to make the Okta Spring Boot starter https://github.com/okta/okta-spring-boot/issues/358[work with Auth0] in the future.
 
 . Install the https://github.com/auth0/auth0-cli[Auth0 CLI] and run `auth0 login` in a terminal.
 
 . Run `auth0 apps create`, provide a memorable name, and select **Regular Web Application**. Specify `\http://localhost:8080/login/oauth2/code/auth0` for the **Callback URLs** and `\http://localhost:3000,http://localhost:8080` for the **Allowed Logout URLs**.
 
-. Modify your `src/main/resources/application.properties` to include your Auth0 issuer, client ID, and client secret. You will have to run `auth0 apps open` and select the app you created to copy your client secret.
+. Modify your `src/main/resources/application.properties` to include your Auth0 issuer, client ID, and client secret. You will have to run `auth0 apps open` and select the app you created to copy your client secret. [`sbr-auth0`]
 +
 [source,properties]
 ----
@@ -778,44 +776,7 @@ spring.security.oauth2.client.registration.auth0.scope=openid,profile,email
 +
 Of course, you can also use your https://manage.auth0.com[Auth0 dashboard] to configure your application. Just make sure to use the same URLs specified above.
 
-. Update `UserController.java` to use `auth0` in its constructor:
-+
-[source,java]
-----
-public UserController(ClientRegistrationRepository registrations) {
-    this.registration = registrations.findByRegistrationId("auth0");
-}
-----
-
-. And update the `logout()` method to work with Auth0:
-+
-[source,java]
-----
-@PostMapping("/api/logout")
-public ResponseEntity<?> logout(HttpServletRequest request) {
-    // send logout URL to client so they can initiate logout
-    StringBuilder logoutUrl = new StringBuilder();
-    String issuerUri = this.registration.getProviderDetails().getIssuerUri();
-    logoutUrl.append(issuerUri.endsWith("/") ? issuerUri + "v2/logout" : issuerUri + "/v2/logout");
-    logoutUrl.append("?client_id=").append(this.registration.getClientId());
-
-    Map<String, String> logoutDetails = new HashMap<>();
-    logoutDetails.put("logoutUrl", logoutUrl.toString());
-    request.getSession(false).invalidate();
-    return ResponseEntity.ok().body(logoutDetails);
-}
-----
-
-. Update `Home.js` in the React project to use different parameters for the logout redirect:
-+
-[source,js]
-----
-window.location.href = `${response.logoutUrl}&returnTo=${window.location.origin}`;
-----
-
-TIP: You can see all the differences between Okta and Auth0 by https://github.com/oktadev/okta-spring-boot-react-crud-example/compare/auth0[comparing their branches on GitHub].
-
-== Add authentication with Okta
+== Add Authentication with Okta
 
 . Add the Okta Spring Boot starter to do OIDC authentication.
 +
@@ -832,41 +793,90 @@ TIP: You can see all the differences between Okta and Auth0 by https://github.co
 +
 Select **Okta Spring Boot Starter**. Accept the default Redirect URI and use `\http://localhost:3000,http://localhost:8080` for the Logout Redirect URI.
 
+. After configuring Spring Security in the section below, update `UserController.java` to use `okta` in its constructor:
++
+[source,java]
+----
+public UserController(ClientRegistrationRepository registrations) {
+    this.registration = registrations.findByRegistrationId("okta");
+}
+----
+
+. And update the `logout()` method to work with Okta:
++
+[source,java]
+----
+@PostMapping("/api/logout")
+public ResponseEntity<?> logout(HttpServletRequest request,
+                                @AuthenticationPrincipal(expression = "idToken") OidcIdToken idToken) {
+    // send logout URL to client so they can initiate logout
+    String logoutUrl = this.registration.getProviderDetails()
+            .getConfigurationMetadata().get("end_session_endpoint").toString();
+
+    Map<String, String> logoutDetails = new HashMap<>();
+    logoutDetails.put("logoutUrl", logoutUrl);
+    logoutDetails.put("idToken", idToken.getTokenValue());
+    request.getSession(false).invalidate();
+    return ResponseEntity.ok().body(logoutDetails);
+}
+----
+
+. Update `Home.js` in the React project to use different parameters for the logout redirect:
++
+[source,js]
+----
+window.location.href = `${response.logoutUrl}?id_token_hint=${response.idToken}`
+  + `&post_logout_redirect_uri=${window.location.origin}`;
+----
+
+TIP: You can see all the differences between Okta and Auth0 by https://github.com/oktadev/okta-spring-boot-react-crud-example/compare/auth0[comparing their branches on GitHub].
+
 == Configure Spring Security for React and user identity
 
-. To make Spring Security React-friendly, create a `SecurityConfiguration.java` file in `src/main/java/.../jugtours/config`. [`security-config`]
+. To make Spring Security React-friendly, create a `SecurityConfiguration.java` file in `src/main/java/.../jugtours/config`. [`sbr-security-config`]
 +
 ====
 [source,java]
 ----
 package com.okta.developer.jugtours.config;
 
+import com.okta.developer.jugtours.web.CookieCsrfFilter;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.springframework.security.web.context.SecurityContextHolderFilter;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
 import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
 import org.springframework.security.web.savedrequest.RequestCache;
 import org.springframework.security.web.savedrequest.SimpleSavedRequest;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
-@EnableWebSecurity
+import java.util.Enumeration;
+
+import static org.springframework.security.web.util.matcher.AntPathRequestMatcher.antMatcher;
+
+@Configuration
 public class SecurityConfiguration {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
             .authorizeHttpRequests((authz) -> authz
-                .antMatchers("/**/*.{js,html,css}").permitAll() // <.>
-                .antMatchers("/", "/api/user").permitAll()
+                .requestMatchers("/", "/index.html", "/static/**",
+                    "/*.ico", "/*.json", "/*.png", "/api/user").permitAll() // <.>
                 .anyRequest().authenticated()
             )
             .csrf((csrf) -> csrf
                 .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()) // <.>
+                // https://stackoverflow.com/a/74521360/65681
+                .csrfTokenRequestHandler(new CsrfTokenRequestAttributeHandler())
             )
+            .addFilterAfter(new CookieCsrfFilter(), BasicAuthenticationFilter.class) // <.>
             .oauth2Login();
         return http.build();
     }
@@ -876,11 +886,13 @@ public class SecurityConfiguration {
         return new HttpSessionRequestCache() {
             @Override
             public void saveRequest(HttpServletRequest request, HttpServletResponse response) {
-                String referrer = request.getHeader("referer");
-                if (referrer != null) { // <.>
-                    request.getSession().setAttribute("SPRING_SECURITY_SAVED_REQUEST",
-                        new SimpleSavedRequest(referrer));
+                String referrer = request.getHeader("referer"); // <.>
+                if (referrer == null) {
+                    referrer = request.getRequestURL().toString();
                 }
+                request.getSession().setAttribute("SPRING_SECURITY_SAVED_REQUEST",
+                    new SimpleSavedRequest(referrer));
+
             }
         };
     }
@@ -888,11 +900,52 @@ public class SecurityConfiguration {
 ----
 . Define what URLs are allowed for anonymous users.
 . `CookieCsrfTokenRepository.withHttpOnlyFalse()` means that the `XSRF-TOKEN` cookie won't be marked HTTP-only, so React can read it and send it back when it tries to manipulate data.
+. Spring Security 6 no longer sets a CSRF cookie for you. Add a filter to do it.
 . The `RequestCache` bean overrides the default request cache.
 . It saves the referrer header (misspelled `referer` in real life), so Spring Security can redirect back to it after authentication.
 ====
 
-. Create `src/main/java/.../jugtours/web/UserController.java` and populate it with the following code. This API will be used by React to 1) find out if a user is authenticated, and 2) perform global logout. [`user-controller`]
+. Create `src/main/java/.../jugtours/web/CookieCsrfFilter.java` to set a CSRF cookie. [`sbr-csrf`]
++
+.`CookieCsrfFilter.java`
+[%collapsible]
+====
+[source,java]
+----
+package com.okta.developer.jugtours.web;
+
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.security.web.csrf.CsrfToken;
+import org.springframework.web.filter.OncePerRequestFilter;
+
+import java.io.IOException;
+
+/**
+ * Spring Security 6 doesn't set a XSRF-TOKEN cookie by default.
+ * This solution is
+ * <a href="https://github.com/spring-projects/spring-security/issues/12141#issuecomment-1321345077">
+ * recommended by Spring Security.</a>
+ */
+public class CookieCsrfFilter extends OncePerRequestFilter {
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
+                                    FilterChain filterChain) throws ServletException, IOException {
+        CsrfToken csrfToken = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
+        response.setHeader(csrfToken.getHeaderName(), csrfToken.getToken());
+        filterChain.doFilter(request, response);
+    }
+}
+----
+====
+
+. Create `src/main/java/.../jugtours/web/UserController.java` and populate it with the following code. This API will be used by React to 1) find out if a user is authenticated, and 2) perform global logout. [`sbr-user-controller`]
 +
 .`UserController.java`
 [%collapsible]
@@ -906,13 +959,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
-import org.springframework.security.oauth2.core.oidc.OidcIdToken;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -921,7 +973,7 @@ public class UserController {
     private ClientRegistration registration;
 
     public UserController(ClientRegistrationRepository registrations) {
-        this.registration = registrations.findByRegistrationId("okta");
+        this.registration = registrations.findByRegistrationId("auth0");
     }
 
     @GetMapping("/api/user")
@@ -934,15 +986,15 @@ public class UserController {
     }
 
     @PostMapping("/api/logout")
-    public ResponseEntity<?> logout(HttpServletRequest request,
-                                    @AuthenticationPrincipal(expression = "idToken") OidcIdToken idToken) {
+    public ResponseEntity<?> logout(HttpServletRequest request) {
         // send logout URL to client so they can initiate logout
-        String logoutUrl = this.registration.getProviderDetails()
-                .getConfigurationMetadata().get("end_session_endpoint").toString();
+        StringBuilder logoutUrl = new StringBuilder();
+        String issuerUri = this.registration.getProviderDetails().getIssuerUri();
+        logoutUrl.append(issuerUri.endsWith("/") ? issuerUri + "v2/logout" : issuerUri + "/v2/logout");
+        logoutUrl.append("?client_id=").append(this.registration.getClientId());
 
         Map<String, String> logoutDetails = new HashMap<>();
-        logoutDetails.put("logoutUrl", logoutUrl);
-        logoutDetails.put("idToken", idToken.getTokenValue());
+        logoutDetails.put("logoutUrl", logoutUrl.toString());
         request.getSession(false).invalidate();
         return ResponseEntity.ok().body(logoutDetails);
     }
@@ -973,44 +1025,30 @@ List<Group> findAllByUserId(String id);
 +
 [source,java]
 ----
-@RestController
-@RequestMapping("/api")
-class GroupController {
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+...
 
-    private final Logger log = LoggerFactory.getLogger(GroupController.class);
-    private GroupRepository groupRepository;
-    private UserRepository userRepository;
+@GetMapping("/groups")
+Collection<Group> groups(Principal principal) {
+    return groupRepository.findAllByUserId(principal.getName());
+}
+...
 
-    public GroupController(GroupRepository groupRepository, UserRepository userRepository) {
-        this.groupRepository = groupRepository;
-        this.userRepository = userRepository;
-    }
+@PostMapping("/group")
+ResponseEntity<Group> createGroup(@Valid @RequestBody Group group,
+                                  @AuthenticationPrincipal OAuth2User principal) throws URISyntaxException {
+    log.info("Request to create group: {}", group);
+    Map<String, Object> details = principal.getAttributes();
+    String userId = details.get("sub").toString();
 
-    @GetMapping("/groups")
-    Collection<Group> groups(Principal principal) {
-        return groupRepository.findAllByUserId(principal.getName());
-    }
+    // check to see if user already exists
+    Optional<User> user = userRepository.findById(userId);
+    group.setUser(user.orElse(new User(userId,
+                    details.get("name").toString(), details.get("email").toString())));
 
-    ...
-
-    @PostMapping("/group")
-    ResponseEntity<Group> createGroup(@Valid @RequestBody Group group,
-                                      @AuthenticationPrincipal OAuth2User principal) throws URISyntaxException {
-        log.info("Request to create group: {}", group);
-        Map<String, Object> details = principal.getAttributes();
-        String userId = details.get("sub").toString();
-
-        // check to see if user already exists
-        Optional<User> user = userRepository.findById(userId);
-        group.setUser(user.orElse(new User(userId,
-                        details.get("name").toString(), details.get("email").toString())));
-
-        Group result = groupRepository.save(group);
-        return ResponseEntity.created(new URI("/api/group/" + result.getId()))
-                .body(result);
-    }
-
-    ...
+    Group result = groupRepository.save(group);
+    return ResponseEntity.created(new URI("/api/group/" + result.getId()))
+            .body(result);
 }
 ----
 
@@ -1018,7 +1056,7 @@ class GroupController {
 
 You'll need to make a few changes to your React components to make them identity-aware.
 
-. Modify `src/index.js` to wrap everything in a `CookieProvider`. This component allows you to read the CSRF cookie and send it back as a header.
+. Modify `index.js` to wrap everything in a `CookieProvider`. This component allows you to read the CSRF cookie and send it back as a header.
 +
 [source,jsx]
 ----
@@ -1034,7 +1072,7 @@ root.render(
 );
 ----
 
-. Modify `app/src/Home.js` to call `/api/user` to see if the user is logged in. If they're not, show a `Login` button. [`home-auth`]
+. Modify `Home.js` to call `/api/user` to see if the user is logged in. If they're not, show a `Login` button. [`sbr-home-auth`]
 +
 ====
 [source,jsx]
@@ -1073,7 +1111,8 @@ const Home = () => {
     if (port === ':3000') {
       port = ':8080';
     }
-    window.location.href = `//${window.location.hostname}${port}/private`;
+    // redirect to a protected URL to trigger authentication
+    window.location.href = `//${window.location.hostname}${port}/api/private`;
   }
 
   const logout = () => {
@@ -1083,8 +1122,7 @@ const Home = () => {
     })
       .then(res => res.json())
       .then(response => {
-        window.location.href = `${response.logoutUrl}?id_token_hint=${response.idToken}`
-          + `&post_logout_redirect_uri=${window.location.origin}`;
+        window.location.href = `${response.logoutUrl}&returnTo=${window.location.origin}`;
       });
   }
 
@@ -1122,7 +1160,7 @@ export default Home;
 . The CSRF cookie from Spring Security has a different name than the header you need to send back. The cookie name is `XSRF-TOKEN`, while the header name is `X-XSRF-TOKEN`.
 ====
 
-. Update `app/src/GroupList.js` to have similar changes.
+. Update `GroupList.js` to have similar changes.
 +
 [source,jsx]
 ----
@@ -1199,7 +1237,7 @@ After all these changes, you should be able to restart both Spring Boot and Reac
 
 To build and package your React app with Maven, you can use the https://github.com/eirslett/frontend-maven-plugin[frontend-maven-plugin] and Maven's profiles to activate it.
 
-. Add properties for versions and a `<profiles>` section to your `pom.xml`. [`profiles`]
+. Add properties for versions and a `<profiles>` section to your `pom.xml`. [`sbr-properties` and `sbr-profiles`]
 +
 .`pom.xml`
 [%collapsible]
@@ -1315,6 +1353,55 @@ spring.profiles.active=@spring.profiles.active@
 ----
 
 . After adding this, you should be able to run `./mvnw spring-boot:run -Pprod` and see your app running on `http://localhost:8080`.
+
+. Everything will work just fine if you start at the root, since React will handle routing. However, if you refresh the page when you're at `http://localhost:8080/groups`, you'll get a 404 error since Spring Boot doesn't have a route for `/groups`. To fix this, add a `SpaWebFilter` that conditionally forwards to the React app. [`sbr-spa`]
++
+.`SpaWebFilter.java`
+[%collapsible]
+====
+[source,java]
+----
+package com.okta.developer.jugtours.web;
+
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.core.user.OAuth2User;
+import org.springframework.web.filter.OncePerRequestFilter;
+
+import java.io.IOException;
+import java.security.Principal;
+
+public class SpaWebFilter extends OncePerRequestFilter {
+
+    @Override
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
+                                    FilterChain filterChain) throws ServletException, IOException {
+        String path = request.getRequestURI();
+        Authentication user = SecurityContextHolder.getContext().getAuthentication();
+        if (user != null && !path.startsWith("/api") &&
+            !path.contains(".") && path.matches("/(.*)")) {
+            request.getRequestDispatcher("/").forward(request, response);
+            return;
+        }
+
+        filterChain.doFilter(request, response);
+    }
+}
+----
+====
+
+. And add it to `SecurityConfiguration.java`:
++
+[source,java]
+----
+.addFilterAfter(new SpaWebFilter(), BasicAuthenticationFilter.class)
+----
+
+. Now, if you restart and reload the page, everything will work as expected. 🤗
 
 == Giddyup with React and Spring Boot!
 
