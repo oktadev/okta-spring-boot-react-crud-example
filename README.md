@@ -74,16 +74,26 @@ cd spring-react
 
 Then, install the [Auth0 CLI](https://github.com/auth0/auth0-cli) and run `auth0 login` in a terminal.
 
-Next, run `auth0 apps create`, provide a memorable name, and select **Regular Web Application**. Specify `http://localhost:8080/login/oauth2/code/auth0` for the Callback URLs and `http://localhost:3000,http://localhost:8080` for the Allowed Logout URLs.
+Next, run `auth0 apps create` and specify the appropriate URLs:
 
-Modify your `src/main/resources/application.properties` to include your Auth0 issuer, client ID, and client secret. You will have run `auth0 apps open` and select the app you created to copy your client secret.
+```shell
+auth0 apps create \
+  --name "Spring Boot" \
+  --description "Spring Boot OIDC App" \
+  --type regular \
+  --callbacks http://localhost:8080/login/oauth2/code/okta \
+  --logout-urls http://localhost:3000,http://localhost:8080 \
+  --reveal-secrets
+```
+
+Modify your `src/main/resources/application.properties` to include your Auth0 issuer, client ID, and client secret. 
 
 ```properties
 # make sure to include the trailing slash for the Auth0 issuer
-spring.security.oauth2.client.provider.auth0.issuer-uri=https://<your-auth0-domain>/
-spring.security.oauth2.client.registration.auth0.client-id=<your-client-id>
-spring.security.oauth2.client.registration.auth0.client-secret=<your-client-secret>
-spring.security.oauth2.client.registration.auth0.scope=openid,profile,email
+okta.oauth2.issuer=https://<your-auth0-domain>/
+okta.oauth2.issuer.client-id=<your-client-id>
+okta.oauth2.issuer.client-secret=<your-client-secret>
+okta.oauth2.audience=https://<your-auth0-domain>/api/v2/
 ```
 
 NOTE: You can also use your [Auth0 dashboard](https://manage.auth0.com) to configure your application. Just make sure to use the same URLs specified above.
