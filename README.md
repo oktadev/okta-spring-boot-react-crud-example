@@ -78,7 +78,7 @@ Next, run `auth0 apps create` and specify the appropriate URLs:
 
 ```shell
 auth0 apps create \
-  --name "Spring Boot" \
+  --name "Spring Boot + React" \
   --description "Spring Boot OIDC App" \
   --type regular \
   --callbacks http://localhost:8080/login/oauth2/code/okta \
@@ -93,7 +93,6 @@ Modify your `src/main/resources/application.properties` to include your Auth0 is
 okta.oauth2.issuer=https://<your-auth0-domain>/
 okta.oauth2.issuer.client-id=<your-client-id>
 okta.oauth2.issuer.client-secret=<your-client-secret>
-okta.oauth2.audience=https://<your-auth0-domain>/api/v2/
 ```
 
 NOTE: You can also use your [Auth0 dashboard](https://manage.auth0.com) to configure your application. Just make sure to use the same URLs specified above.
