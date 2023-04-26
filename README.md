@@ -79,8 +79,8 @@ Modify your `src/main/resources/application.properties` to include your Auth0 is
 ```properties
 # make sure to include the trailing slash for the Auth0 issuer
 okta.oauth2.issuer=https://<your-auth0-domain>/
-okta.oauth2.issuer.client-id=<your-client-id>
-okta.oauth2.issuer.client-secret=<your-client-secret>
+okta.oauth2.client-id=<your-client-id>
+okta.oauth2.client-secret=<your-client-secret>
 ```
 
 NOTE: You can also use your [Auth0 dashboard](https://manage.auth0.com) to configure your application. Just make sure to use the same URLs specified above.
