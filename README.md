@@ -22,19 +22,7 @@ git clone https://github.com/oktadev/okta-spring-boot-react-crud-example.git spr
 cd spring-react
 ```
 
-This will get a copy of the project installed locally. To install all of its dependencies and start each app, follow the instructions below.
-
-To run the server, run:
- 
-```bash
-./mvnw spring-boot:run
-```
-
-To run the client, cd into the `app` folder and run:
- 
-```bash
-npm i && npm start
-```
+This will get a copy of the project installed locally. 
 
 ### Create an Application in Okta
 
