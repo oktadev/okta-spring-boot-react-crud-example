@@ -18,7 +18,7 @@ import java.util.Map;
 
 @RestController
 public class UserController {
-    private ClientRegistration registration;
+    private final ClientRegistration registration;
 
     public UserController(ClientRegistrationRepository registrations) {
         this.registration = registrations.findByRegistrationId("okta");
