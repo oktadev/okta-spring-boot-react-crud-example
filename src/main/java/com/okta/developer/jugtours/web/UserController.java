@@ -17,10 +17,10 @@ import java.util.Map;
 
 @RestController
 public class UserController {
-    private ClientRegistration registration;
+    private final ClientRegistration registration;
 
     public UserController(ClientRegistrationRepository registrations) {
-        this.registration = registrations.findByRegistrationId("auth0");
+        this.registration = registrations.findByRegistrationId("okta");
     }
 
     @GetMapping("/api/user")
